@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { toPng } from "html-to-image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type CargoId =
@@ -41,6 +42,8 @@ type Cargo = {
   titulo: string;
   digitos: number;
 };
+
+type FormatoImagem = "story" | "publicacao";
 
 const cargos: Cargo[] = [
   {
@@ -201,6 +204,9 @@ export default function Home() {
   const [estado, setEstado] = useState("MG");
   const [modalImpressaoAberto, setModalImpressaoAberto] = useState(false);
   const [quantidadeCopias, setQuantidadeCopias] = useState<4 | 6 | 9>(9);
+  const [formatoImagem, setFormatoImagem] =
+    useState<FormatoImagem>("publicacao");
+  const [gerandoImagem, setGerandoImagem] = useState(false);
   const [candidatos, setCandidatos] = useState<Candidato[]>([]);
   const [carregandoCandidatos, setCarregandoCandidatos] = useState(true);
   const [erroCandidatos, setErroCandidatos] = useState("");
@@ -214,6 +220,7 @@ export default function Home() {
   >({});
   const resultadosRef = useRef<(HTMLButtonElement | null)[]>([]);
   const modalImpressaoRef = useRef<HTMLElement | null>(null);
+  const arteSocialRef = useRef<HTMLElement | null>(null);
 
   const [cargoAberto, setCargoAberto] = useState<CargoId>("deputado-federal");
   const [buscas, setBuscas] = useState<Partial<Record<CargoId, string>>>({});
@@ -483,6 +490,49 @@ export default function Home() {
 
   function imprimirCola() {
     window.print();
+  }
+
+  async function baixarImagem(formato: FormatoImagem) {
+    if (gerandoImagem) return;
+
+    setGerandoImagem(true);
+    setFormatoImagem(formato);
+
+    try {
+      await document.fonts?.ready;
+      await new Promise<void>((resolver) =>
+        window.requestAnimationFrame(() =>
+          window.requestAnimationFrame(() => resolver()),
+        ),
+      );
+
+      const arte = arteSocialRef.current;
+      if (!arte) throw new Error("Arte não encontrada.");
+
+      const largura = 1080;
+      const altura = formato === "story" ? 1920 : 1350;
+      const url = await toPng(arte, {
+        width: largura,
+        height: altura,
+        canvasWidth: largura,
+        canvasHeight: altura,
+        pixelRatio: 1,
+        cacheBust: true,
+        backgroundColor: "#f7f4ea",
+      });
+
+      const link = document.createElement("a");
+      link.download = `minha-cola-eleitoral-${formato}-${estado}.png`;
+      link.href = url;
+      link.click();
+    } catch (erro) {
+      console.error(erro);
+      window.alert(
+        "Não foi possível gerar a imagem. Aguarde as fotos carregarem e tente novamente.",
+      );
+    } finally {
+      setGerandoImagem(false);
+    }
   }
 
   function abrirCargo(cargoId: CargoId) {
@@ -1141,6 +1191,28 @@ export default function Home() {
 
               <button
                 type="button"
+                className="botao-imagem"
+                disabled={gerandoImagem}
+                onClick={() => baixarImagem("story")}
+              >
+                {gerandoImagem && formatoImagem === "story"
+                  ? "Gerando..."
+                  : "Imagem Story"}
+              </button>
+
+              <button
+                type="button"
+                className="botao-imagem"
+                disabled={gerandoImagem}
+                onClick={() => baixarImagem("publicacao")}
+              >
+                {gerandoImagem && formatoImagem === "publicacao"
+                  ? "Gerando..."
+                  : "Imagem publicação"}
+              </button>
+
+              <button
+                type="button"
                 className="botao-confirmar-impressao"
                 onClick={imprimirCola}
               >
@@ -1219,6 +1291,75 @@ export default function Home() {
         ))}
       </section>
 
+      <section
+        ref={arteSocialRef}
+        className={`arte-social formato-${formatoImagem}`}
+        aria-hidden="true"
+      >
+        <div className="arte-social-decoracao" />
+        <div className="arte-social-conteudo">
+          <span className="arte-social-selo">ELEIÇÕES 2026</span>
+          <h2>Minha cola eleitoral</h2>
+          <p>Meus candidatos e números para o dia da votação.</p>
+
+          <article className="resumo-cola-final cola-social">
+            <header className="cola-cabecalho">
+              <div>
+                <span>ELEIÇÕES 2026</span>
+                <h2>Minha Cola Eleitoral</h2>
+              </div>
+              <strong>{estado}</strong>
+            </header>
+
+            <div className="cola-candidatos">
+              {cargos.map((cargo) => {
+                const candidato = selecionados[cargo.id];
+                return (
+                  <div
+                    className={`cola-candidato ${
+                      candidato ? "" : "cola-candidato-vazio"
+                    }`}
+                    key={cargo.id}
+                  >
+                    <span className="cola-ordem">{cargo.ordem}</span>
+                    {candidato ? (
+                      <>
+                        <FotoNaCola candidato={candidato} />
+                        <span className="cola-dados">
+                          <small>{obterTituloCargo(cargo, estado)}</small>
+                          <strong>{candidato.nome}</strong>
+                          <em>{candidato.partido}</em>
+                        </span>
+                        <b>{candidato.numero}</b>
+                      </>
+                    ) : (
+                      <>
+                        <span className="cola-dados cola-dados-vazio">
+                          <small>{obterTituloCargo(cargo, estado)}</small>
+                          <span className="linha-preenchimento-manual" />
+                        </span>
+                        <span className="digitos-preenchimento-manual">
+                          {Array.from(
+                            { length: cargo.digitos },
+                            (_, indice) => (
+                              <i key={indice} />
+                            ),
+                          )}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </article>
+
+          <p className="arte-social-aviso">
+            Confira os números antes de votar.
+          </p>
+        </div>
+      </section>
+
       <footer className="rodape">
         <p>
           <strong>Atenção:</strong> esta ferramenta não registra votos e não
@@ -1234,6 +1375,162 @@ export default function Home() {
       <style jsx global>{`
         .folha-impressao-real {
           display: none;
+        }
+
+        .arte-social {
+          position: fixed;
+          top: 0;
+          left: -12000px;
+          z-index: -1;
+          width: 1080px;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 88% 8%, #f1ca30 0 58px, transparent 60px),
+            radial-gradient(
+              circle at 96% 16%,
+              #518e45 0 88px,
+              transparent 90px
+            ),
+            #f7f4ea;
+          color: #1a3328;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .arte-social.formato-story {
+          height: 1920px;
+        }
+        .arte-social.formato-publicacao {
+          height: 1350px;
+        }
+
+        .arte-social-decoracao {
+          position: absolute;
+          right: -170px;
+          bottom: -190px;
+          width: 520px;
+          height: 520px;
+          border-radius: 50%;
+          background: #1a3328;
+        }
+
+        .arte-social-conteudo {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          height: 100%;
+          box-sizing: border-box;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .formato-story .arte-social-conteudo {
+          padding: 190px 80px 110px;
+        }
+        .formato-publicacao .arte-social-conteudo {
+          padding: 70px 80px 55px;
+        }
+
+        .arte-social-selo {
+          padding: 10px 18px;
+          border-radius: 999px;
+          background: #f1ca30;
+          font-size: 19px;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+        }
+
+        .arte-social-conteudo > h2 {
+          margin: 18px 0 5px;
+          font-size: 54px;
+          line-height: 1;
+          letter-spacing: -0.04em;
+        }
+
+        .arte-social-conteudo > p:not(.arte-social-aviso) {
+          margin: 0 0 30px;
+          color: #65716b;
+          font-size: 22px;
+        }
+
+        .cola-social {
+          width: 700px !important;
+          height: 918px !important;
+          aspect-ratio: auto !important;
+          border-width: 4px !important;
+          border-radius: 28px !important;
+          box-shadow: 0 30px 80px rgba(26, 51, 40, 0.2) !important;
+        }
+
+        .formato-story .cola-social {
+          width: 760px !important;
+          height: 1025px !important;
+        }
+
+        .cola-social .cola-cabecalho {
+          gap: 24px !important;
+          padding: 25px 34px !important;
+        }
+        .cola-social .cola-cabecalho span {
+          font-size: 14px !important;
+        }
+        .cola-social .cola-cabecalho h2 {
+          font-size: 32px !important;
+          white-space: nowrap !important;
+        }
+        .cola-social .cola-cabecalho > strong {
+          width: 58px !important;
+          min-width: 58px !important;
+          height: 58px !important;
+          font-size: 18px !important;
+        }
+
+        .cola-social .cola-candidatos {
+          min-height: 0 !important;
+          padding: 10px 34px !important;
+        }
+        .cola-social .cola-candidato {
+          grid-template-columns: 38px 64px minmax(0, 1fr) auto !important;
+          gap: 15px !important;
+        }
+        .cola-social .cola-candidato-vazio {
+          grid-template-columns: 38px minmax(0, 1fr) auto !important;
+        }
+        .cola-social .cola-ordem {
+          width: 36px !important;
+          height: 36px !important;
+          font-size: 16px !important;
+        }
+        .cola-social .foto-na-cola,
+        .cola-social .iniciais-cola {
+          width: 62px !important;
+          min-width: 62px !important;
+          height: 62px !important;
+          font-size: 16px !important;
+        }
+        .cola-social .cola-dados small {
+          font-size: 12px !important;
+        }
+        .cola-social .cola-dados strong {
+          font-size: 23px !important;
+        }
+        .cola-social .cola-dados em {
+          font-size: 13px !important;
+        }
+        .cola-social .cola-candidato > b {
+          font-size: 35px !important;
+        }
+        .cola-social .linha-preenchimento-manual {
+          height: 32px !important;
+        }
+        .cola-social .digitos-preenchimento-manual i {
+          width: 28px !important;
+          height: 38px !important;
+        }
+
+        .arte-social-aviso {
+          margin: 28px 0 0;
+          font-size: 20px;
+          font-weight: 800;
         }
 
         .pagina button:focus-visible,
@@ -2274,13 +2571,15 @@ export default function Home() {
         .modal-impressao-acoes {
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
           justify-content: flex-end;
           gap: 12px;
           padding: 24px 30px 28px;
         }
 
         .padrao-impressao {
-          margin: 0 auto 0 0;
+          flex-basis: 100%;
+          margin: 0;
           color: #66716c;
           font-size: 0.82rem;
           font-weight: 700;
@@ -2298,6 +2597,17 @@ export default function Home() {
           border: 1px solid #b8c0bc;
           background: transparent;
           color: #1a3328;
+        }
+
+        .botao-imagem {
+          border: 1px solid #d6ab19;
+          background: #f1ca30;
+          color: #1a3328;
+        }
+
+        .botao-imagem:disabled {
+          cursor: wait;
+          opacity: 0.65;
         }
 
         .botao-confirmar-impressao {
@@ -2362,13 +2672,18 @@ export default function Home() {
           }
 
           .modal-impressao-acoes {
-            flex-direction: column-reverse;
+            flex-direction: column;
             gap: 8px;
             padding: 16px;
           }
 
           .modal-impressao-acoes button {
             width: 100%;
+          }
+
+          .padrao-impressao {
+            width: 100%;
+            text-align: center;
           }
         }
 
