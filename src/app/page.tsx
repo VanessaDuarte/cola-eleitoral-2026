@@ -200,7 +200,6 @@ function FotoNaCola({ candidato }: { candidato?: Candidato }) {
 export default function Home() {
   const [estado, setEstado] = useState("MG");
   const [modalImpressaoAberto, setModalImpressaoAberto] = useState(false);
-  const [quantidadeCopias, setQuantidadeCopias] = useState<2 | 4 | 6>(6);
   const [candidatos, setCandidatos] = useState<Candidato[]>([]);
   const [carregandoCandidatos, setCarregandoCandidatos] = useState(true);
   const [erroCandidatos, setErroCandidatos] = useState("");
@@ -926,10 +925,6 @@ export default function Home() {
               <strong>{estado}</strong>
             </header>
 
-            <p className="cola-instrucao">
-              Confira a ordem e digite os números na urna.
-            </p>
-
             <div className="cola-candidatos">
               {cargos.map((cargo) => {
                 const candidato = selecionados[cargo.id];
@@ -979,11 +974,6 @@ export default function Home() {
                 );
               })}
             </div>
-
-            <footer className="cola-rodape">
-              <span>Leve esta cola em papel.</span>
-              <strong>Celular não pode ser usado na cabine.</strong>
-            </footer>
           </div>
 
           <button
@@ -1033,8 +1023,8 @@ export default function Home() {
             </div>
 
             <div className="area-previa-final">
-              <div className={`folha-a4-preview copias-${quantidadeCopias}`}>
-                {Array.from({ length: quantidadeCopias }, (_, index) => (
+              <div className="folha-a4-preview padrao-63x85">
+                {Array.from({ length: 9 }, (_, index) => (
                   <div
                     className="resumo-cola-final cola-miniatura-estilizada"
                     key={index}
@@ -1046,10 +1036,6 @@ export default function Home() {
                       </div>
                       <strong>{estado}</strong>
                     </header>
-
-                    <p className="cola-instrucao">
-                      Confira a ordem e digite os números na urna.
-                    </p>
 
                     <div className="cola-candidatos">
                       {cargos.map((cargo) => {
@@ -1097,50 +1083,16 @@ export default function Home() {
                         );
                       })}
                     </div>
-
-                    <footer className="cola-rodape">
-                      <span>Leve esta cola em papel.</span>
-                      <strong>Celular não pode ser usado na cabine.</strong>
-                    </footer>
                   </div>
                 ))}
               </div>
             </div>
 
-            <fieldset className="opcoes-copias">
-              <legend>Quantas cópias deseja imprimir?</legend>
-
-              <div className="grid-opcoes-copias">
-                <button
-                  type="button"
-                  className={quantidadeCopias === 2 ? "selecionada" : ""}
-                  onClick={() => setQuantidadeCopias(2)}
-                >
-                  <strong>2 cópias</strong>
-                  <span>Duas colas em 1x2</span>
-                </button>
-
-                <button
-                  type="button"
-                  className={quantidadeCopias === 4 ? "selecionada" : ""}
-                  onClick={() => setQuantidadeCopias(4)}
-                >
-                  <strong>4 cópias</strong>
-                  <span>Quatro colas em 2x2</span>
-                </button>
-
-                <button
-                  type="button"
-                  className={quantidadeCopias === 6 ? "selecionada" : ""}
-                  onClick={() => setQuantidadeCopias(6)}
-                >
-                  <strong>6 cópias</strong>
-                  <span>Seis colas em 2x3</span>
-                </button>
-              </div>
-            </fieldset>
-
             <div className="modal-impressao-acoes">
+              <p className="padrao-impressao">
+                9 colas por folha A4 · 6,3 × 8,5 cm cada
+              </p>
+
               <button
                 type="button"
                 className="botao-voltar-impressao"
@@ -1154,18 +1106,15 @@ export default function Home() {
                 className="botao-confirmar-impressao"
                 onClick={imprimirCola}
               >
-                Imprimir {quantidadeCopias} cópias
+                Imprimir folha A4
               </button>
             </div>
           </section>
         </div>
       )}
 
-      <section
-        className={`folha-impressao-real copias-${quantidadeCopias}`}
-        aria-label="Colas eleitorais"
-      >
-        {Array.from({ length: quantidadeCopias }, (_, indice) => (
+      <section className="folha-impressao-real" aria-label="Colas eleitorais">
+        {Array.from({ length: 9 }, (_, indice) => (
           <article
             className="resumo-cola-final cola-impressa-fidelidade"
             key={indice}
@@ -1178,10 +1127,6 @@ export default function Home() {
 
               <strong>{estado}</strong>
             </header>
-
-            <p className="cola-instrucao">
-              Confira a ordem e digite os números na urna.
-            </p>
 
             <div className="cola-candidatos">
               {cargos.map((cargo) => {
@@ -1229,11 +1174,6 @@ export default function Home() {
                 );
               })}
             </div>
-
-            <footer className="cola-rodape">
-              <span>Leve esta cola em papel.</span>
-              <strong>Celular não pode ser usado na cabine.</strong>
-            </footer>
           </article>
         ))}
       </section>
@@ -1386,13 +1326,15 @@ export default function Home() {
           padding: 10px;
           box-sizing: border-box;
           display: grid;
-          gap: 8px;
+          grid-template-columns: repeat(3, 30%);
+          grid-auto-rows: 28.62%;
+          justify-content: center;
+          align-content: center;
+          gap: 1%;
         }
 
         .folha-a4-preview.copias-2 {
-          grid-template-columns: minmax(0, 50%);
-          grid-template-rows: repeat(2, minmax(0, 1fr));
-          justify-content: center;
+          grid-template-rows: 30.303%;
         }
 
         .folha-a4-preview.copias-2 .cola-miniatura-estilizada {
@@ -1401,14 +1343,11 @@ export default function Home() {
         }
 
         .folha-a4-preview.copias-4 {
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: repeat(2, minmax(0, 1fr));
+          grid-template-rows: repeat(2, 30.303%);
         }
 
-        .folha-a4-preview.copias-6 {
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: repeat(3, minmax(0, 1fr));
-          gap: 6px;
+        .folha-a4-preview.padrao-63x85 {
+          grid-template-rows: repeat(3, 28.62%);
         }
 
         .cola-miniatura-estilizada {
@@ -1420,6 +1359,15 @@ export default function Home() {
           border-radius: 8px !important;
           border-width: 1px !important;
           box-shadow: none !important;
+        }
+
+        /* Prévia proporcional ao padrão físico de 6,3 × 8,5 cm. */
+        .folha-a4-preview .cola-miniatura-estilizada {
+          width: 100% !important;
+          height: 100% !important;
+          max-height: 100% !important;
+          align-self: stretch !important;
+          overflow: hidden !important;
         }
 
         .cola-miniatura-estilizada .cola-cabecalho {
@@ -1709,12 +1657,14 @@ export default function Home() {
         }
 
         /* A prévia 2x3 precisa ser mais compacta que os cartões de 2 e 4 cópias. */
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-cabecalho {
+        .folha-a4-preview.padrao-63x85
+          .cola-miniatura-estilizada
+          .cola-cabecalho {
           gap: 3px !important;
           padding: 3px 5px !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada {
+        .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada {
           width: 100% !important;
           height: 100% !important;
           max-height: 100% !important;
@@ -1722,7 +1672,7 @@ export default function Home() {
           overflow: hidden !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-cabecalho
           h2 {
@@ -1730,7 +1680,7 @@ export default function Home() {
           line-height: 1 !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-cabecalho
           span {
@@ -1738,7 +1688,7 @@ export default function Home() {
           font-size: 0.27rem !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-cabecalho
           > strong {
@@ -1748,37 +1698,45 @@ export default function Home() {
           font-size: 0.34rem !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-instrucao {
+        .folha-a4-preview.padrao-63x85
+          .cola-miniatura-estilizada
+          .cola-instrucao {
           padding: 2px 5px !important;
           font-size: 0.27rem !important;
           line-height: 1 !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidatos {
+        .folha-a4-preview.padrao-63x85
+          .cola-miniatura-estilizada
+          .cola-candidatos {
           min-height: 0 !important;
           padding: 1px 5px !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidato {
+        .folha-a4-preview.padrao-63x85
+          .cola-miniatura-estilizada
+          .cola-candidato {
           grid-template-columns: 9px 12px minmax(0, 1fr) auto !important;
           gap: 2px !important;
           overflow: hidden !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-candidato-vazio {
           grid-template-columns: 9px minmax(0, 1fr) auto !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-ordem {
+        .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada .cola-ordem {
           width: 9px !important;
           height: 9px !important;
           font-size: 0.26rem !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .foto-na-cola,
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .iniciais-cola {
+        .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.padrao-63x85
+          .cola-miniatura-estilizada
+          .iniciais-cola {
           width: 11px !important;
           min-width: 11px !important;
           height: 11px !important;
@@ -1786,7 +1744,7 @@ export default function Home() {
           font-size: 0.25rem !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-dados
           small {
@@ -1795,7 +1753,7 @@ export default function Home() {
           line-height: 1 !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-dados
           strong {
@@ -1803,26 +1761,29 @@ export default function Home() {
           line-height: 1 !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-dados em {
+        .folha-a4-preview.padrao-63x85
+          .cola-miniatura-estilizada
+          .cola-dados
+          em {
           margin-top: 0 !important;
           font-size: 0.23rem !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-candidato
           > b {
           font-size: 0.49rem !important;
         }
 
-        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-rodape {
+        .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada .cola-rodape {
           gap: 2px !important;
           padding: 2px 5px !important;
           font-size: 0.23rem !important;
           line-height: 1 !important;
         }
 
-        .folha-a4-preview.copias-6
+        .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-rodape
           strong {
@@ -1866,17 +1827,17 @@ export default function Home() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 12px;
-          padding: 16px 20px;
+          gap: 8px;
+          padding: 9px 12px;
           background: #1a3328;
           color: #ffffff;
         }
 
         .resumo-cola-final .cola-cabecalho span {
           display: block;
-          margin-bottom: 2px;
+          margin-bottom: 1px;
           color: #e5b324;
-          font-size: 0.62rem;
+          font-size: 0.5rem;
           font-weight: 800;
           letter-spacing: 0.12em;
         }
@@ -1884,7 +1845,7 @@ export default function Home() {
         .resumo-cola-final .cola-cabecalho h2 {
           margin: 0;
           color: #ffffff;
-          font-size: 1.35rem;
+          font-size: 1rem;
           font-weight: 700;
           line-height: 1.1;
           letter-spacing: -0.02em;
@@ -1894,13 +1855,13 @@ export default function Home() {
         .resumo-cola-final .cola-cabecalho > strong {
           display: grid;
           place-items: center;
-          width: 44px;
-          min-width: 44px;
-          height: 44px;
+          width: 32px;
+          min-width: 32px;
+          height: 32px;
           border-radius: 50%;
           background: #e5b324;
           color: #1a3328;
-          font-size: 0.85rem;
+          font-size: 0.68rem;
           font-weight: 800;
         }
 
@@ -2117,9 +2078,17 @@ export default function Home() {
 
         .modal-impressao-acoes {
           display: flex;
+          align-items: center;
           justify-content: flex-end;
           gap: 12px;
           padding: 24px 30px 28px;
+        }
+
+        .padrao-impressao {
+          margin: 0 auto 0 0;
+          color: #66716c;
+          font-size: 0.82rem;
+          font-weight: 700;
         }
 
         .modal-impressao-acoes button {
@@ -2264,39 +2233,22 @@ export default function Home() {
             print-color-adjust: exact !important;
             break-after: avoid !important;
             page-break-after: avoid !important;
-          }
-
-          .folha-impressao-real.copias-2 {
-            display: grid !important;
-            grid-template-columns: 96mm !important;
-            grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
+            grid-template-columns: repeat(3, 63mm) !important;
+            grid-template-rows: repeat(3, 85mm) !important;
             justify-content: center !important;
-            gap: 4mm !important;
-          }
-
-          .folha-impressao-real.copias-4 {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            grid-template-rows: 1fr 1fr !important;
-            gap: 6mm !important;
-          }
-
-          .folha-impressao-real.copias-6 {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            grid-template-rows: repeat(3, 1fr) !important;
-            gap: 4mm !important;
+            align-content: center !important;
+            gap: 2mm !important;
           }
 
           .cola-impressa-fidelidade {
-            width: 100% !important;
-            height: 100% !important;
+            width: 63mm !important;
+            height: 85mm !important;
             min-width: 0 !important;
             min-height: 0 !important;
             aspect-ratio: auto !important;
             overflow: hidden !important;
             border: 2px solid #1a3328 !important;
-            border-radius: 12px !important;
+            border-radius: 2.5mm !important;
             background: #ffffff !important;
             box-sizing: border-box !important;
             page-break-inside: avoid !important;
@@ -2330,99 +2282,101 @@ export default function Home() {
             border-radius: 0.7mm !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-cabecalho {
-            gap: 2mm !important;
-            padding: 2.2mm 3mm !important;
+          .folha-impressao-real .cola-cabecalho {
+            gap: 1.2mm !important;
+            padding: 1mm 2.5mm !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-cabecalho span {
-            margin-bottom: 0.3mm !important;
+          .folha-impressao-real .cola-cabecalho span {
+            margin-bottom: 0.1mm !important;
+            font-size: 4.3pt !important;
+          }
+
+          .folha-impressao-real .cola-cabecalho h2 {
+            font-size: 8pt !important;
+          }
+
+          .folha-impressao-real .cola-cabecalho > strong {
+            width: 6mm !important;
+            min-width: 6mm !important;
+            height: 6mm !important;
             font-size: 5pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-cabecalho h2 {
-            font-size: 10pt !important;
-          }
-
-          .folha-impressao-real.copias-6 .cola-cabecalho > strong {
-            width: 8mm !important;
-            min-width: 8mm !important;
-            height: 8mm !important;
-            font-size: 6.5pt !important;
-          }
-
-          .folha-impressao-real.copias-6 .cola-instrucao {
+          .folha-impressao-real .cola-instrucao {
             padding: 1.2mm 3mm !important;
             font-size: 5.2pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-candidatos {
-            padding: 0.5mm 3mm !important;
+          .folha-impressao-real .cola-candidatos {
+            min-height: 0 !important;
+            padding: 0.3mm 2.5mm !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-candidato {
-            grid-template-columns: 4.5mm 7mm minmax(0, 1fr) auto !important;
-            gap: 1.3mm !important;
+          .folha-impressao-real .cola-candidato {
+            grid-template-columns: 4mm 6mm minmax(0, 1fr) auto !important;
+            gap: 1mm !important;
+            overflow: hidden !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-candidato-vazio {
-            grid-template-columns: 4.5mm minmax(0, 1fr) auto !important;
+          .folha-impressao-real .cola-candidato-vazio {
+            grid-template-columns: 4mm minmax(0, 1fr) auto !important;
           }
 
-          .folha-impressao-real.copias-6 .linha-preenchimento-manual {
+          .folha-impressao-real .linha-preenchimento-manual {
             height: 3.5mm !important;
           }
 
-          .folha-impressao-real.copias-6 .digitos-preenchimento-manual {
+          .folha-impressao-real .digitos-preenchimento-manual {
             gap: 0.5mm !important;
           }
 
-          .folha-impressao-real.copias-6 .digitos-preenchimento-manual i {
+          .folha-impressao-real .digitos-preenchimento-manual i {
             width: 3.2mm !important;
             height: 4.5mm !important;
             border-width: 0.3mm !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-ordem {
-            width: 4.5mm !important;
-            height: 4.5mm !important;
-            font-size: 5.5pt !important;
+          .folha-impressao-real .cola-ordem {
+            width: 4mm !important;
+            height: 4mm !important;
+            font-size: 5pt !important;
           }
 
-          .folha-impressao-real.copias-6 .foto-na-cola,
-          .folha-impressao-real.copias-6 .iniciais-cola {
-            width: 7mm !important;
-            min-width: 7mm !important;
-            height: 7mm !important;
+          .folha-impressao-real .foto-na-cola,
+          .folha-impressao-real .iniciais-cola {
+            width: 6mm !important;
+            min-width: 6mm !important;
+            height: 6mm !important;
             border-width: 0.3mm !important;
             font-size: 5pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-dados small {
+          .folha-impressao-real .cola-dados small {
             margin-bottom: 0.2mm !important;
-            font-size: 4.5pt !important;
+            font-size: 4pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-dados strong {
-            font-size: 7.5pt !important;
+          .folha-impressao-real .cola-dados strong {
+            font-size: 6.5pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-dados em {
+          .folha-impressao-real .cola-dados em {
             margin-top: 0.3mm !important;
-            font-size: 4.7pt !important;
+            font-size: 4.2pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-candidato > b {
-            font-size: 13pt !important;
+          .folha-impressao-real .cola-candidato > b {
+            font-size: 11pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-rodape {
+          .folha-impressao-real .cola-rodape {
             gap: 1mm !important;
             padding: 1.3mm 3mm !important;
             font-size: 4.6pt !important;
           }
 
-          .folha-impressao-real.copias-6 .cola-rodape strong {
+          .folha-impressao-real .cola-rodape strong {
             max-width: 40mm !important;
           }
 
