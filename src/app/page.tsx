@@ -1660,8 +1660,8 @@ export default function Home() {
         .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-cabecalho {
-          gap: 3px !important;
-          padding: 3px 5px !important;
+          gap: 2px !important;
+          padding: 1px 3px !important;
         }
 
         .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada {
@@ -1676,7 +1676,7 @@ export default function Home() {
           .cola-miniatura-estilizada
           .cola-cabecalho
           h2 {
-          font-size: 0.5rem !important;
+          font-size: 0.25rem !important;
           line-height: 1 !important;
         }
 
@@ -1684,18 +1684,18 @@ export default function Home() {
           .cola-miniatura-estilizada
           .cola-cabecalho
           span {
-          margin-bottom: 1px !important;
-          font-size: 0.27rem !important;
+          margin-bottom: 0 !important;
+          font-size: 0.16rem !important;
         }
 
         .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-cabecalho
           > strong {
-          width: 16px !important;
-          min-width: 16px !important;
-          height: 16px !important;
-          font-size: 0.34rem !important;
+          width: 8px !important;
+          min-width: 8px !important;
+          height: 8px !important;
+          font-size: 0.18rem !important;
         }
 
         .folha-a4-preview.padrao-63x85
@@ -1710,38 +1710,38 @@ export default function Home() {
           .cola-miniatura-estilizada
           .cola-candidatos {
           min-height: 0 !important;
-          padding: 1px 5px !important;
+          padding: 0 3px !important;
         }
 
         .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-candidato {
-          grid-template-columns: 9px 12px minmax(0, 1fr) auto !important;
-          gap: 2px !important;
+          grid-template-columns: 6px 8px minmax(0, 1fr) auto !important;
+          gap: 1px !important;
           overflow: hidden !important;
         }
 
         .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-candidato-vazio {
-          grid-template-columns: 9px minmax(0, 1fr) auto !important;
+          grid-template-columns: 6px minmax(0, 1fr) auto !important;
         }
 
         .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada .cola-ordem {
-          width: 9px !important;
-          height: 9px !important;
-          font-size: 0.26rem !important;
+          width: 6px !important;
+          height: 6px !important;
+          font-size: 0.17rem !important;
         }
 
         .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada .foto-na-cola,
         .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .iniciais-cola {
-          width: 11px !important;
-          min-width: 11px !important;
-          height: 11px !important;
+          width: 8px !important;
+          min-width: 8px !important;
+          height: 8px !important;
           border-width: 1px !important;
-          font-size: 0.25rem !important;
+          font-size: 0.16rem !important;
         }
 
         .folha-a4-preview.padrao-63x85
@@ -1749,7 +1749,7 @@ export default function Home() {
           .cola-dados
           small {
           margin-bottom: 0 !important;
-          font-size: 0.23rem !important;
+          font-size: 0.14rem !important;
           line-height: 1 !important;
         }
 
@@ -1757,7 +1757,7 @@ export default function Home() {
           .cola-miniatura-estilizada
           .cola-dados
           strong {
-          font-size: 0.31rem !important;
+          font-size: 0.24rem !important;
           line-height: 1 !important;
         }
 
@@ -1766,14 +1766,14 @@ export default function Home() {
           .cola-dados
           em {
           margin-top: 0 !important;
-          font-size: 0.23rem !important;
+          font-size: 0.15rem !important;
         }
 
         .folha-a4-preview.padrao-63x85
           .cola-miniatura-estilizada
           .cola-candidato
           > b {
-          font-size: 0.49rem !important;
+          font-size: 0.34rem !important;
         }
 
         .folha-a4-preview.padrao-63x85 .cola-miniatura-estilizada .cola-rodape {
