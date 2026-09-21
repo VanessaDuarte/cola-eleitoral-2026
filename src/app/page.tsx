@@ -199,34 +199,21 @@ function FotoNaCola({ candidato }: { candidato?: Candidato }) {
 
 export default function Home() {
   const [estado, setEstado] = useState("MG");
-  const [modalImpressaoAberto, setModalImpressaoAberto] =
-    useState(false);
-  const [quantidadeCopias, setQuantidadeCopias] = useState<1 | 4>(4);
+  const [modalImpressaoAberto, setModalImpressaoAberto] = useState(false);
+  const [quantidadeCopias, setQuantidadeCopias] = useState<1 | 4 | 6>(6);
   const [candidatos, setCandidatos] = useState<Candidato[]>([]);
-  const [carregandoCandidatos, setCarregandoCandidatos] =
-    useState(true);
+  const [carregandoCandidatos, setCarregandoCandidatos] = useState(true);
   const [erroCandidatos, setErroCandidatos] = useState("");
-  const [estadoRestaurado, setEstadoRestaurado] = useState<
-    string | null
-  >(null);
-  const botoesCargoRef = useRef<
-    Partial<Record<CargoId, HTMLButtonElement | null>>
-  >({});
-  const camposBuscaRef = useRef<
-    Partial<Record<CargoId, HTMLInputElement | null>>
-  >({});
+  const [estadoRestaurado, setEstadoRestaurado] = useState<string | null>(null);
+  
+  const botoesCargoRef = useRef<Partial<Record<CargoId, HTMLButtonElement | null>>>({});
+  const camposBuscaRef = useRef<Partial<Record<CargoId, HTMLInputElement | null>>>({});
   const resultadosRef = useRef<(HTMLButtonElement | null)[]>([]);
   const modalImpressaoRef = useRef<HTMLElement | null>(null);
-  const [cargoAberto, setCargoAberto] =
-    useState<CargoId>("deputado-federal");
-
-  const [buscas, setBuscas] = useState<
-    Partial<Record<CargoId, string>>
-  >({});
-
-  const [selecionados, setSelecionados] = useState<
-    Partial<Record<CargoId, Candidato>>
-  >({});
+  
+  const [cargoAberto, setCargoAberto] = useState<CargoId>("deputado-federal");
+  const [buscas, setBuscas] = useState<Partial<Record<CargoId, string>>>({});
+  const [selecionados, setSelecionados] = useState<Partial<Record<CargoId, Candidato>>>({});
 
   const totalSelecionado = Object.keys(selecionados).length;
   const progresso = (totalSelecionado / cargos.length) * 100;
@@ -412,29 +399,26 @@ export default function Home() {
           candidato.nome
         ).includes(buscaNormalizada);
 
-      const correspondeAoNumero =
-        candidato.numero.includes(buscaNormalizada);
+        const correspondeAoNumero =
+          candidato.numero.includes(buscaNormalizada);
 
-      const correspondeAoPartido =
-        normalizarTexto(candidato.partido).includes(buscaNormalizada) ||
-        normalizarTexto(candidato.partidoNome ?? "").includes(
-          buscaNormalizada
+        const correspondeAoPartido =
+          normalizarTexto(candidato.partido).includes(buscaNormalizada) ||
+          normalizarTexto(candidato.partidoNome ?? "").includes(
+            buscaNormalizada
+          );
+
+        return (
+          pertenceAoCargo &&
+          (correspondeAoNome ||
+            correspondeAoNumero ||
+            correspondeAoPartido)
         );
-
-      return (
-        pertenceAoCargo &&
-        (correspondeAoNome ||
-          correspondeAoNumero ||
-          correspondeAoPartido)
-      );
       })
       .slice(0, 30);
   }, [buscas, candidatos, cargoAberto]);
 
-  function selecionarCandidato(
-    cargoId: CargoId,
-    candidato: Candidato
-  ) {
+  function selecionarCandidato(cargoId: CargoId, candidato: Candidato) {
     const outraVagaDoSenado =
       cargoId === "senador-1"
         ? selecionados["senador-2"]
@@ -753,8 +737,7 @@ export default function Home() {
           <div className="lista-cargos">
             {cargos.map((cargo, indiceCargo) => {
               const estaAberto = cargoAberto === cargo.id;
-              const candidatoSelecionado =
-                selecionados[cargo.id];
+              const candidatoSelecionado = selecionados[cargo.id];
 
               return (
                 <article
@@ -916,48 +899,48 @@ export default function Home() {
                               ) : resultados.length > 0 ? (
                                 resultados.map(
                                   (candidato, indiceResultado) => (
-                                  <button
-                                    key={candidato.id}
-                                    type="button"
-                                    className="resultado-candidato"
-                                    ref={(elemento) => {
-                                      resultadosRef.current[
-                                        indiceResultado
-                                      ] = elemento;
-                                    }}
-                                    onKeyDown={(evento) =>
-                                      navegarEntreResultados(
-                                        evento,
-                                        indiceResultado
-                                      )
-                                    }
-                                    onClick={() =>
-                                      selecionarCandidato(
-                                        cargo.id,
-                                        candidato
-                                      )
-                                    }
-                                  >
-                                    <IdentificacaoVisual
-                                      candidato={candidato}
-                                    />
+                                    <button
+                                      key={candidato.id}
+                                      type="button"
+                                      className="resultado-candidato"
+                                      ref={(elemento) => {
+                                        resultadosRef.current[
+                                          indiceResultado
+                                        ] = elemento;
+                                      }}
+                                      onKeyDown={(evento) =>
+                                        navegarEntreResultados(
+                                          evento,
+                                          indiceResultado
+                                        )
+                                      }
+                                      onClick={() =>
+                                        selecionarCandidato(
+                                          cargo.id,
+                                          candidato
+                                        )
+                                      }
+                                    >
+                                      <IdentificacaoVisual
+                                        candidato={candidato}
+                                      />
 
-                                    <span className="dados-resultado">
-                                      <strong>
-                                        {candidato.nome}
+                                      <span className="dados-resultado">
+                                        <strong>
+                                          {candidato.nome}
+                                        </strong>
+                                        <small>
+                                          {candidato.partido}
+                                          {candidato.situacao
+                                            ? ` · ${candidato.situacao}`
+                                            : ""}
+                                        </small>
+                                      </span>
+
+                                      <strong className="numero-resultado">
+                                        {candidato.numero}
                                       </strong>
-                                      <small>
-                                        {candidato.partido}
-                                        {candidato.situacao
-                                          ? ` · ${candidato.situacao}`
-                                          : ""}
-                                      </small>
-                                    </span>
-
-                                    <strong className="numero-resultado">
-                                      {candidato.numero}
-                                    </strong>
-                                  </button>
+                                    </button>
                                   )
                                 )
                               ) : (
@@ -1122,14 +1105,14 @@ export default function Home() {
             <fieldset className="opcoes-copias">
               <legend>Quantas cópias deseja imprimir?</legend>
 
-              <div>
+              <div className="grid-opcoes-copias">
                 <button
                   type="button"
                   className={quantidadeCopias === 1 ? "selecionada" : ""}
                   onClick={() => setQuantidadeCopias(1)}
                 >
                   <strong>1 cópia</strong>
-                  <span>Uma cola centralizada na folha</span>
+                  <span>Uma cola centralizada</span>
                 </button>
 
                 <button
@@ -1138,7 +1121,16 @@ export default function Home() {
                   onClick={() => setQuantidadeCopias(4)}
                 >
                   <strong>4 cópias</strong>
-                  <span>Quatro colas na mesma folha A4</span>
+                  <span>Quatro colas em 2x2</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={quantidadeCopias === 6 ? "selecionada" : ""}
+                  onClick={() => setQuantidadeCopias(6)}
+                >
+                  <strong>6 cópias</strong>
+                  <span>Seis colas em 2x3</span>
                 </button>
               </div>
             </fieldset>
@@ -1157,7 +1149,7 @@ export default function Home() {
                 className="botao-confirmar-impressao"
                 onClick={imprimirCola}
               >
-                Imprimir {quantidadeCopias === 1 ? "1 cópia" : "4 cópias"}
+                Imprimir {quantidadeCopias} {quantidadeCopias === 1 ? "cópia" : "cópias"}
               </button>
             </div>
           </section>
@@ -1166,7 +1158,11 @@ export default function Home() {
 
       <section
         className={`folha-impressao ${
-          quantidadeCopias === 1 ? "uma-copia" : "quatro-copias"
+          quantidadeCopias === 1
+            ? "uma-copia"
+            : quantidadeCopias === 4
+            ? "quatro-copias"
+            : "seis-copias"
         }`}
         aria-label="Colas eleitorais"
       >
@@ -1563,9 +1559,9 @@ export default function Home() {
           font-weight: 800;
         }
 
-        .opcoes-copias > div {
+        .grid-opcoes-copias {
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 12px;
         }
 
@@ -1573,7 +1569,7 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           gap: 3px;
-          padding: 15px 16px;
+          padding: 15px 12px;
           border: 2px solid #d8ddd9;
           border-radius: 14px;
           background: #ffffff;
@@ -1589,12 +1585,12 @@ export default function Home() {
         }
 
         .opcoes-copias button strong {
-          font-size: 1rem;
+          font-size: 0.95rem;
         }
 
         .opcoes-copias button span {
           color: #66716c;
-          font-size: 0.78rem;
+          font-size: 0.72rem;
         }
 
         .modal-impressao-acoes {
@@ -1650,7 +1646,7 @@ export default function Home() {
             padding-left: 20px;
           }
 
-          .opcoes-copias > div {
+          .grid-opcoes-copias {
             grid-template-columns: 1fr;
           }
 
@@ -1690,17 +1686,15 @@ export default function Home() {
 
           .folha-impressao {
             display: grid !important;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 4mm;
             width: 210mm;
             height: 297mm;
-            padding: 7mm;
+            padding: 6mm;
             box-sizing: border-box;
             overflow: hidden;
             background: #f9f6eb;
           }
 
+          /* Modo 1 Cópia */
           .folha-impressao.uma-copia {
             display: flex !important;
             align-items: center;
@@ -1710,6 +1704,21 @@ export default function Home() {
           .folha-impressao.uma-copia .cola-impressa {
             width: 96mm;
             height: 139.5mm;
+          }
+
+          /* Modo 4 Cópias (2x2) */
+          .folha-impressao.quatro-copias {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 4mm;
+          }
+
+          /* Modo 6 Cópias (2x3) */
+          .folha-impressao.seis-copias {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 3mm;
+            padding: 4mm;
           }
 
           .cola-impressa {
@@ -1883,6 +1892,70 @@ export default function Home() {
           .cola-rodape strong {
             max-width: 48mm;
             text-align: right;
+          }
+
+          /* Otimizações de fontes e tamanhos exclusivas para o layout de 6 cópias */
+          .folha-impressao.seis-copias .cola-cabecalho {
+            padding: 2mm 3.5mm;
+          }
+
+          .folha-impressao.seis-copias .cola-cabecalho h2 {
+            font-size: 11pt;
+          }
+
+          .folha-impressao.seis-copias .cola-cabecalho > strong {
+            min-width: 8mm;
+            height: 8mm;
+            font-size: 7.5pt;
+          }
+
+          .folha-impressao.seis-copias .cola-instrucao {
+            padding: 1mm 3.5mm;
+            font-size: 5.8pt;
+          }
+
+          .folha-impressao.seis-copias .cola-candidatos {
+            padding: 0.5mm 3.5mm;
+          }
+
+          .folha-impressao.seis-copias .cola-candidato {
+            grid-template-columns: 4.5mm 7mm minmax(0, 1fr) auto;
+            gap: 1.5mm;
+          }
+
+          .folha-impressao.seis-copias .cola-ordem {
+            width: 4.5mm;
+            height: 4.5mm;
+            font-size: 5.5pt;
+          }
+
+          .folha-impressao.seis-copias .foto-na-cola,
+          .folha-impressao.seis-copias .iniciais-cola {
+            width: 7mm;
+            min-width: 7mm;
+            height: 7mm;
+            font-size: 5pt;
+          }
+
+          .folha-impressao.seis-copias .cola-dados small {
+            font-size: 4.8pt;
+          }
+
+          .folha-impressao.seis-copias .cola-dados strong {
+            font-size: 8.5pt;
+          }
+
+          .folha-impressao.seis-copias .cola-dados em {
+            font-size: 4.8pt;
+          }
+
+          .folha-impressao.seis-copias .cola-candidato > b {
+            font-size: 14pt;
+          }
+
+          .folha-impressao.seis-copias .cola-rodape {
+            padding: 1.5mm 3.5mm;
+            font-size: 5pt;
           }
         }
       `}</style>
