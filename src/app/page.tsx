@@ -1817,6 +1817,174 @@ export default function Home() {
           max-width: 62px !important;
         }
 
+        /* Escala fiel da versão média: 6 colas por folha. */
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada {
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 0 !important;
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-cabecalho {
+          gap: 2px !important;
+          padding: 2px 4px !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          span {
+          margin-bottom: 0 !important;
+          font-size: 0.18rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          h2 {
+          font-size: 0.3rem !important;
+          line-height: 1 !important;
+          white-space: nowrap !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          > strong {
+          width: 10px !important;
+          min-width: 10px !important;
+          height: 10px !important;
+          font-size: 0.22rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidatos {
+          min-height: 0 !important;
+          padding: 0 4px !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: 7px 10px minmax(0, 1fr) auto !important;
+          gap: 1px !important;
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-candidato-vazio {
+          grid-template-columns: 7px minmax(0, 1fr) auto !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-ordem {
+          width: 7px !important;
+          height: 7px !important;
+          font-size: 0.19rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .iniciais-cola {
+          width: 10px !important;
+          min-width: 10px !important;
+          height: 10px !important;
+          font-size: 0.19rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-dados
+          small {
+          margin-bottom: 0 !important;
+          font-size: 0.16rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.28rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-dados em {
+          margin-top: 0 !important;
+          font-size: 0.17rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-candidato
+          > b {
+          font-size: 0.4rem !important;
+        }
+
+        /* Escala fiel da versão ampliada: 4 colas por folha. */
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-cabecalho {
+          gap: 3px !important;
+          padding: 3px 6px !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          h2 {
+          font-size: 0.4rem !important;
+          white-space: nowrap !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          span {
+          font-size: 0.22rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          > strong {
+          width: 13px !important;
+          min-width: 13px !important;
+          height: 13px !important;
+          font-size: 0.28rem !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidatos {
+          min-height: 0 !important;
+          padding: 1px 6px !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: 9px 13px minmax(0, 1fr) auto !important;
+          gap: 2px !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-ordem {
+          width: 9px !important;
+          height: 9px !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .iniciais-cola {
+          width: 13px !important;
+          min-width: 13px !important;
+          height: 13px !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.36rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-candidato
+          > b {
+          font-size: 0.52rem !important;
+        }
+
         /* ESTILO OFICIAL DA COLA ELEITORAL CONFORME A IMAGEM */
         .resumo.resumo-formato-final {
           padding: 0;
