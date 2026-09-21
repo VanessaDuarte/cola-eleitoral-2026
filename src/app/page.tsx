@@ -205,15 +205,21 @@ export default function Home() {
   const [carregandoCandidatos, setCarregandoCandidatos] = useState(true);
   const [erroCandidatos, setErroCandidatos] = useState("");
   const [estadoRestaurado, setEstadoRestaurado] = useState<string | null>(null);
-  
-  const botoesCargoRef = useRef<Partial<Record<CargoId, HTMLButtonElement | null>>>({});
-  const camposBuscaRef = useRef<Partial<Record<CargoId, HTMLInputElement | null>>>({});
+
+  const botoesCargoRef = useRef<
+    Partial<Record<CargoId, HTMLButtonElement | null>>
+  >({});
+  const camposBuscaRef = useRef<
+    Partial<Record<CargoId, HTMLInputElement | null>>
+  >({});
   const resultadosRef = useRef<(HTMLButtonElement | null)[]>([]);
   const modalImpressaoRef = useRef<HTMLElement | null>(null);
-  
+
   const [cargoAberto, setCargoAberto] = useState<CargoId>("deputado-federal");
   const [buscas, setBuscas] = useState<Partial<Record<CargoId, string>>>({});
-  const [selecionados, setSelecionados] = useState<Partial<Record<CargoId, Candidato>>>({});
+  const [selecionados, setSelecionados] = useState<
+    Partial<Record<CargoId, Candidato>>
+  >({});
 
   const totalSelecionado = Object.keys(selecionados).length;
   const progresso = (totalSelecionado / cargos.length) * 100;
@@ -231,10 +237,9 @@ export default function Home() {
       setEstadoRestaurado(null);
 
       try {
-        const resposta = await fetch(
-          `/dados/candidatos-2026-${estado}.json`,
-          { cache: "no-store" }
-        );
+        const resposta = await fetch(`/dados/candidatos-2026-${estado}.json`, {
+          cache: "no-store",
+        });
 
         if (!resposta.ok) {
           throw new Error("Arquivo de candidatos não encontrado.");
@@ -249,9 +254,7 @@ export default function Home() {
         if (componenteAtivo) {
           const candidatosVisiveis = dados.candidatos.filter(
             (candidato) =>
-              !PARTIDOS_OCULTOS.has(
-                normalizarSiglaPartido(candidato.partido)
-              )
+              !PARTIDOS_OCULTOS.has(normalizarSiglaPartido(candidato.partido)),
           );
 
           setCandidatos(candidatosVisiveis);
@@ -262,7 +265,7 @@ export default function Home() {
           setErroCandidatos(
             erro instanceof Error
               ? erro.message
-              : "Não foi possível carregar os candidatos."
+              : "Não foi possível carregar os candidatos.",
           );
         }
       } finally {
@@ -299,7 +302,7 @@ export default function Home() {
 
     try {
       const conteudoSalvo = window.localStorage.getItem(
-        obterChaveColaSalva(estado)
+        obterChaveColaSalva(estado),
       );
 
       if (!conteudoSalvo) {
@@ -311,9 +314,7 @@ export default function Home() {
         Record<CargoId, string>
       >;
 
-      const selecaoRestaurada: Partial<
-        Record<CargoId, Candidato>
-      > = {};
+      const selecaoRestaurada: Partial<Record<CargoId, Candidato>> = {};
 
       for (const cargo of cargos) {
         const candidatoId = idsSalvos[cargo.id];
@@ -328,8 +329,7 @@ export default function Home() {
             : cargo.id;
 
         const candidato = candidatos.find(
-          (item) =>
-            item.id === candidatoId && item.cargo === cargoDosDados
+          (item) => item.id === candidatoId && item.cargo === cargoDosDados,
         );
 
         if (candidato) {
@@ -340,7 +340,7 @@ export default function Home() {
       setSelecionados(selecaoRestaurada);
 
       const primeiroCargoVazio = cargos.find(
-        (cargo) => !selecaoRestaurada[cargo.id]
+        (cargo) => !selecaoRestaurada[cargo.id],
       );
 
       if (primeiroCargoVazio) {
@@ -368,12 +368,12 @@ export default function Home() {
       Object.entries(selecionados).map(([cargoId, candidato]) => [
         cargoId,
         candidato.id,
-      ])
+      ]),
     );
 
     window.localStorage.setItem(
       obterChaveColaSalva(estado),
-      JSON.stringify(idsSelecionados)
+      JSON.stringify(idsSelecionados),
     );
   }, [selecionados, estado, estadoRestaurado, erroCandidatos]);
 
@@ -392,27 +392,23 @@ export default function Home() {
 
     return candidatos
       .filter((candidato) => {
-        const pertenceAoCargo =
-          candidato.cargo === cargoDaPesquisa;
+        const pertenceAoCargo = candidato.cargo === cargoDaPesquisa;
 
-        const correspondeAoNome = normalizarTexto(
-          candidato.nome
-        ).includes(buscaNormalizada);
+        const correspondeAoNome = normalizarTexto(candidato.nome).includes(
+          buscaNormalizada,
+        );
 
-        const correspondeAoNumero =
-          candidato.numero.includes(buscaNormalizada);
+        const correspondeAoNumero = candidato.numero.includes(buscaNormalizada);
 
         const correspondeAoPartido =
           normalizarTexto(candidato.partido).includes(buscaNormalizada) ||
           normalizarTexto(candidato.partidoNome ?? "").includes(
-            buscaNormalizada
+            buscaNormalizada,
           );
 
         return (
           pertenceAoCargo &&
-          (correspondeAoNome ||
-            correspondeAoNumero ||
-            correspondeAoPartido)
+          (correspondeAoNome || correspondeAoNumero || correspondeAoPartido)
         );
       })
       .slice(0, 30);
@@ -423,12 +419,12 @@ export default function Home() {
       cargoId === "senador-1"
         ? selecionados["senador-2"]
         : cargoId === "senador-2"
-        ? selecionados["senador-1"]
-        : undefined;
+          ? selecionados["senador-1"]
+          : undefined;
 
     if (outraVagaDoSenado?.id === candidato.id) {
       window.alert(
-        "Escolha candidatos diferentes para as duas vagas de senador. O voto repetido será considerado nulo."
+        "Escolha candidatos diferentes para as duas vagas de senador. O voto repetido será considerado nulo.",
       );
       return;
     }
@@ -443,9 +439,7 @@ export default function Home() {
       [cargoId]: "",
     }));
 
-    const indiceAtual = cargos.findIndex(
-      (cargo) => cargo.id === cargoId
-    );
+    const indiceAtual = cargos.findIndex((cargo) => cargo.id === cargoId);
 
     const proximoCargo = cargos[indiceAtual + 1];
 
@@ -474,7 +468,7 @@ export default function Home() {
 
   function limparCola() {
     const confirmou = window.confirm(
-      "Deseja realmente apagar todos os candidatos selecionados?"
+      "Deseja realmente apagar todos os candidatos selecionados?",
     );
 
     if (!confirmou) {
@@ -488,11 +482,7 @@ export default function Home() {
   }
 
   function imprimirCola() {
-    setModalImpressaoAberto(false);
-
-    window.requestAnimationFrame(() => {
-      window.print();
-    });
+    window.print();
   }
 
   function abrirCargo(cargoId: CargoId) {
@@ -507,18 +497,14 @@ export default function Home() {
 
   function navegarEntreCargos(
     evento: React.KeyboardEvent<HTMLButtonElement>,
-    indiceAtual: number
+    indiceAtual: number,
   ) {
     let proximoIndice: number | null = null;
 
     if (evento.key === "ArrowDown" || evento.key === "ArrowRight") {
       proximoIndice = (indiceAtual + 1) % cargos.length;
-    } else if (
-      evento.key === "ArrowUp" ||
-      evento.key === "ArrowLeft"
-    ) {
-      proximoIndice =
-        (indiceAtual - 1 + cargos.length) % cargos.length;
+    } else if (evento.key === "ArrowUp" || evento.key === "ArrowLeft") {
+      proximoIndice = (indiceAtual - 1 + cargos.length) % cargos.length;
     } else if (evento.key === "Home") {
       proximoIndice = 0;
     } else if (evento.key === "End") {
@@ -542,9 +528,7 @@ export default function Home() {
     });
   }
 
-  function navegarNaBusca(
-    evento: React.KeyboardEvent<HTMLInputElement>
-  ) {
+  function navegarNaBusca(evento: React.KeyboardEvent<HTMLInputElement>) {
     if (evento.key === "ArrowDown" && resultados.length > 0) {
       evento.preventDefault();
       resultadosRef.current[0]?.focus();
@@ -574,7 +558,7 @@ export default function Home() {
 
   function navegarEntreResultados(
     evento: React.KeyboardEvent<HTMLButtonElement>,
-    indiceAtual: number
+    indiceAtual: number,
   ) {
     if (evento.key === "ArrowDown") {
       evento.preventDefault();
@@ -614,9 +598,7 @@ export default function Home() {
     }
   }
 
-  function controlarTecladoModal(
-    evento: React.KeyboardEvent<HTMLElement>
-  ) {
+  function controlarTecladoModal(evento: React.KeyboardEvent<HTMLElement>) {
     if (evento.key === "Escape") {
       evento.preventDefault();
       setModalImpressaoAberto(false);
@@ -629,8 +611,8 @@ export default function Home() {
 
     const elementos = Array.from(
       modalImpressaoRef.current.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      )
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
     );
 
     if (elementos.length === 0) {
@@ -671,7 +653,7 @@ export default function Home() {
             className="botao-ajuda"
             onClick={() =>
               window.alert(
-                "Escolha o estado e pesquise cada candidato pelo nome, número ou partido."
+                "Escolha o estado e pesquise cada candidato pelo nome, número ou partido.",
               )
             }
           >
@@ -691,8 +673,8 @@ export default function Home() {
           </h1>
 
           <p>
-            Pesquise seus candidatos pelo nome, número ou partido e
-            gere uma cola pronta para imprimir.
+            Pesquise seus candidatos pelo nome, número ou partido e gere uma
+            cola pronta para imprimir.
           </p>
 
           <label className="campo-estado">
@@ -742,9 +724,7 @@ export default function Home() {
               return (
                 <article
                   key={cargo.id}
-                  className={`cartao-cargo ${
-                    estaAberto ? "aberto" : ""
-                  } ${
+                  className={`cartao-cargo ${estaAberto ? "aberto" : ""} ${
                     candidatoSelecionado ? "preenchido" : ""
                   }`}
                 >
@@ -761,9 +741,7 @@ export default function Home() {
                     aria-expanded={estaAberto}
                     aria-controls={`conteudo-${cargo.id}`}
                   >
-                    <span className="numero-ordem">
-                      {cargo.ordem}
-                    </span>
+                    <span className="numero-ordem">{cargo.ordem}</span>
 
                     <span className="identificacao-cargo">
                       <strong>{obterTituloCargo(cargo, estado)}</strong>
@@ -777,17 +755,11 @@ export default function Home() {
 
                   {candidatoSelecionado && !estaAberto && (
                     <div className="candidato-escolhido">
-                      <IdentificacaoVisual
-                        candidato={candidatoSelecionado}
-                      />
+                      <IdentificacaoVisual candidato={candidatoSelecionado} />
 
                       <span className="dados-escolhidos">
-                        <strong>
-                          {candidatoSelecionado.nome}
-                        </strong>
-                        <small>
-                          {candidatoSelecionado.partido}
-                        </small>
+                        <strong>{candidatoSelecionado.nome}</strong>
+                        <small>{candidatoSelecionado.partido}</small>
                       </span>
 
                       <strong className="numero-escolhido">
@@ -797,9 +769,7 @@ export default function Home() {
                       <button
                         type="button"
                         className="botao-trocar"
-                        onClick={() =>
-                          removerCandidato(cargo.id)
-                        }
+                        onClick={() => removerCandidato(cargo.id)}
                       >
                         Trocar
                       </button>
@@ -807,10 +777,7 @@ export default function Home() {
                   )}
 
                   {estaAberto && (
-                    <div
-                      className="conteudo-cargo"
-                      id={`conteudo-${cargo.id}`}
-                    >
+                    <div className="conteudo-cargo" id={`conteudo-${cargo.id}`}>
                       {candidatoSelecionado ? (
                         <div className="candidato-escolhido destaque">
                           <IdentificacaoVisual
@@ -818,12 +785,8 @@ export default function Home() {
                           />
 
                           <span className="dados-escolhidos">
-                            <strong>
-                              {candidatoSelecionado.nome}
-                            </strong>
-                            <small>
-                              {candidatoSelecionado.partido}
-                            </small>
+                            <strong>{candidatoSelecionado.nome}</strong>
+                            <small>{candidatoSelecionado.partido}</small>
                           </span>
 
                           <strong className="numero-escolhido">
@@ -833,9 +796,7 @@ export default function Home() {
                           <button
                             type="button"
                             className="botao-trocar"
-                            onClick={() =>
-                              removerCandidato(cargo.id)
-                            }
+                            onClick={() => removerCandidato(cargo.id)}
                           >
                             Trocar
                           </button>
@@ -868,8 +829,7 @@ export default function Home() {
                               onChange={(evento) =>
                                 setBuscas((estadoAnterior) => ({
                                   ...estadoAnterior,
-                                  [cargo.id]:
-                                    evento.target.value,
+                                  [cargo.id]: evento.target.value,
                                 }))
                               }
                             />
@@ -879,8 +839,7 @@ export default function Home() {
                             Use ↑ e ↓ para navegar e Enter para selecionar.
                           </p>
 
-                          {(buscas[cargo.id] ?? "").trim() !==
-                            "" && (
+                          {(buscas[cargo.id] ?? "").trim() !== "" && (
                             <div
                               className="resultados-busca"
                               id={`resultados-${cargo.id}`}
@@ -897,52 +856,44 @@ export default function Home() {
                                   importação dos dados do TSE.
                                 </p>
                               ) : resultados.length > 0 ? (
-                                resultados.map(
-                                  (candidato, indiceResultado) => (
-                                    <button
-                                      key={candidato.id}
-                                      type="button"
-                                      className="resultado-candidato"
-                                      ref={(elemento) => {
-                                        resultadosRef.current[
-                                          indiceResultado
-                                        ] = elemento;
-                                      }}
-                                      onKeyDown={(evento) =>
-                                        navegarEntreResultados(
-                                          evento,
-                                          indiceResultado
-                                        )
-                                      }
-                                      onClick={() =>
-                                        selecionarCandidato(
-                                          cargo.id,
-                                          candidato
-                                        )
-                                      }
-                                    >
-                                      <IdentificacaoVisual
-                                        candidato={candidato}
-                                      />
+                                resultados.map((candidato, indiceResultado) => (
+                                  <button
+                                    key={candidato.id}
+                                    type="button"
+                                    className="resultado-candidato"
+                                    ref={(elemento) => {
+                                      resultadosRef.current[indiceResultado] =
+                                        elemento;
+                                    }}
+                                    onKeyDown={(evento) =>
+                                      navegarEntreResultados(
+                                        evento,
+                                        indiceResultado,
+                                      )
+                                    }
+                                    onClick={() =>
+                                      selecionarCandidato(cargo.id, candidato)
+                                    }
+                                  >
+                                    <IdentificacaoVisual
+                                      candidato={candidato}
+                                    />
 
-                                      <span className="dados-resultado">
-                                        <strong>
-                                          {candidato.nome}
-                                        </strong>
-                                        <small>
-                                          {candidato.partido}
-                                          {candidato.situacao
-                                            ? ` · ${candidato.situacao}`
-                                            : ""}
-                                        </small>
-                                      </span>
+                                    <span className="dados-resultado">
+                                      <strong>{candidato.nome}</strong>
+                                      <small>
+                                        {candidato.partido}
+                                        {candidato.situacao
+                                          ? ` · ${candidato.situacao}`
+                                          : ""}
+                                      </small>
+                                    </span>
 
-                                      <strong className="numero-resultado">
-                                        {candidato.numero}
-                                      </strong>
-                                    </button>
-                                  )
-                                )
+                                    <strong className="numero-resultado">
+                                      {candidato.numero}
+                                    </strong>
+                                  </button>
+                                ))
                               ) : (
                                 <p className="sem-resultados">
                                   Nenhum candidato encontrado.
@@ -991,9 +942,7 @@ export default function Home() {
 
                     <span className="cola-dados">
                       <small>{obterTituloCargo(cargo, estado)}</small>
-                      <strong>
-                        {candidato?.nome ?? "Não selecionado"}
-                      </strong>
+                      <strong>{candidato?.nome ?? "Não selecionado"}</strong>
                       <em>{candidato?.partido ?? "Aguardando escolha"}</em>
                     </span>
 
@@ -1044,9 +993,7 @@ export default function Home() {
             <div className="modal-impressao-topo">
               <div>
                 <span>PRÉ-VISUALIZAÇÃO</span>
-                <h2 id="titulo-modal-impressao">
-                  Sua cola está pronta
-                </h2>
+                <h2 id="titulo-modal-impressao">Sua cola está pronta</h2>
               </div>
 
               <button
@@ -1059,47 +1006,49 @@ export default function Home() {
             </div>
 
             <div className="area-previa-final">
-              <article className="cola-impressa previa-final">
-                <header className="cola-cabecalho">
-                  <div>
-                    <span>ELEIÇÕES 2026</span>
-                    <h2>Minha Cola Eleitoral</h2>
-                  </div>
-
-                  <strong>{estado}</strong>
-                </header>
-
-                <p className="cola-instrucao">
-                  Confira a ordem e digite os números na urna.
-                </p>
-
-                <div className="cola-candidatos">
-                  {cargos.map((cargo) => {
-                    const candidato = selecionados[cargo.id];
-
-                    return (
-                      <div className="cola-candidato" key={cargo.id}>
-                        <span className="cola-ordem">{cargo.ordem}</span>
-
-                        <FotoNaCola candidato={candidato} />
-
-                        <span className="cola-dados">
-                          <small>{obterTituloCargo(cargo, estado)}</small>
-                          <strong>{candidato?.nome}</strong>
-                          <em>{candidato?.partido}</em>
-                        </span>
-
-                        <b>{candidato?.numero}</b>
+              <div className={`folha-a4-preview copias-${quantidadeCopias}`}>
+                {Array.from({ length: quantidadeCopias }, (_, index) => (
+                  <div
+                    className="resumo-cola-final cola-miniatura-estilizada"
+                    key={index}
+                  >
+                    <header className="cola-cabecalho">
+                      <div>
+                        <span>ELEIÇÕES 2026</span>
+                        <h2>Minha Cola Eleitoral</h2>
                       </div>
-                    );
-                  })}
-                </div>
+                      <strong>{estado}</strong>
+                    </header>
 
-                <footer className="cola-rodape">
-                  <span>Leve esta cola em papel.</span>
-                  <strong>Celular não pode ser usado na cabine.</strong>
-                </footer>
-              </article>
+                    <p className="cola-instrucao">
+                      Confira a ordem e digite os números na urna.
+                    </p>
+
+                    <div className="cola-candidatos">
+                      {cargos.map((cargo) => {
+                        const candidato = selecionados[cargo.id];
+                        return (
+                          <div className="cola-candidato" key={cargo.id}>
+                            <span className="cola-ordem">{cargo.ordem}</span>
+                            <FotoNaCola candidato={candidato} />
+                            <span className="cola-dados">
+                              <small>{obterTituloCargo(cargo, estado)}</small>
+                              <strong>{candidato?.nome ?? "—"}</strong>
+                              <em>{candidato?.partido}</em>
+                            </span>
+                            <b>{candidato?.numero ?? "—"}</b>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <footer className="cola-rodape">
+                      <span>Leve esta cola em papel.</span>
+                      <strong>Celular não pode ser usado na cabine.</strong>
+                    </footer>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <fieldset className="opcoes-copias">
@@ -1149,7 +1098,8 @@ export default function Home() {
                 className="botao-confirmar-impressao"
                 onClick={imprimirCola}
               >
-                Imprimir {quantidadeCopias} {quantidadeCopias === 1 ? "cópia" : "cópias"}
+                Imprimir {quantidadeCopias}{" "}
+                {quantidadeCopias === 1 ? "cópia" : "cópias"}
               </button>
             </div>
           </section>
@@ -1157,17 +1107,14 @@ export default function Home() {
       )}
 
       <section
-        className={`folha-impressao ${
-          quantidadeCopias === 1
-            ? "uma-copia"
-            : quantidadeCopias === 4
-            ? "quatro-copias"
-            : "seis-copias"
-        }`}
+        className={`folha-impressao-real copias-${quantidadeCopias}`}
         aria-label="Colas eleitorais"
       >
         {Array.from({ length: quantidadeCopias }, (_, indice) => (
-          <article className="cola-impressa" key={indice}>
+          <article
+            className="resumo-cola-final cola-impressa-fidelidade"
+            key={indice}
+          >
             <header className="cola-cabecalho">
               <div>
                 <span>ELEIÇÕES 2026</span>
@@ -1213,18 +1160,18 @@ export default function Home() {
 
       <footer className="rodape">
         <p>
-          <strong>Atenção:</strong> esta ferramenta não registra
-          votos e não possui vínculo com a Justiça Eleitoral.
+          <strong>Atenção:</strong> esta ferramenta não registra votos e não
+          possui vínculo com a Justiça Eleitoral.
         </p>
 
         <p>
-          Imprima sua cola. O celular não pode ser utilizado na
-          cabine de votação.
+          Imprima sua cola. O celular não pode ser utilizado na cabine de
+          votação.
         </p>
       </footer>
 
       <style jsx global>{`
-        .folha-impressao {
+        .folha-impressao-real {
           display: none;
         }
 
@@ -1241,7 +1188,7 @@ export default function Home() {
         .opcoes-copias button:focus-visible {
           position: relative;
           z-index: 2;
-          border-color: #20372f;
+          border-color: #1a3328;
           box-shadow: 0 0 0 4px rgba(241, 202, 48, 0.35);
         }
 
@@ -1284,8 +1231,10 @@ export default function Home() {
         .modal-impressao {
           width: min(760px, 100%);
           max-height: calc(100vh - 48px);
+          max-height: calc(100dvh - 48px);
           overflow-y: auto;
-          border: 1px solid rgba(32, 55, 47, 0.18);
+          overscroll-behavior: contain;
+          border: 1px solid rgba(26, 51, 40, 0.18);
           border-radius: 24px;
           background: #f9f6eb;
           box-shadow: 0 24px 80px rgba(13, 28, 23, 0.3);
@@ -1297,7 +1246,7 @@ export default function Home() {
           justify-content: space-between;
           gap: 20px;
           padding: 28px 30px 22px;
-          background: #20372f;
+          background: #1a3328;
           color: #f9f6eb;
         }
 
@@ -1331,16 +1280,439 @@ export default function Home() {
         }
 
         .area-previa-final {
-          display: grid;
-          place-items: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           padding: 24px 30px;
           background:
-            linear-gradient(rgba(32, 55, 47, 0.055) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(32, 55, 47, 0.055) 1px, transparent 1px),
+            linear-gradient(rgba(26, 51, 40, 0.055) 1px, transparent 1px),
+            linear-gradient(
+              90deg,
+              rgba(26, 51, 40, 0.055) 1px,
+              transparent 1px
+            ),
             #ece9df;
           background-size: 18px 18px;
         }
 
+        /* PRÉ-VISUALIZAÇÃO DA FOLHA A4 */
+        .folha-a4-preview {
+          background: #ffffff;
+          width: min(310px, 100%);
+          height: auto;
+          aspect-ratio: 210 / 297;
+          border: 1px solid #ccc;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+          padding: 10px;
+          box-sizing: border-box;
+          display: grid;
+          gap: 8px;
+        }
+
+        .folha-a4-preview.copias-1 {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada {
+          width: 50%;
+          height: 50%;
+        }
+
+        .folha-a4-preview.copias-4 {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: repeat(2, minmax(0, 1fr));
+        }
+
+        .folha-a4-preview.copias-6 {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: repeat(3, minmax(0, 1fr));
+          gap: 6px;
+        }
+
+        .cola-miniatura-estilizada {
+          transform-origin: top left;
+          min-width: 0;
+          min-height: 0;
+          aspect-ratio: auto;
+          font-size: 0.45rem !important;
+          border-radius: 8px !important;
+          border-width: 1px !important;
+          box-shadow: none !important;
+        }
+
+        .cola-miniatura-estilizada .cola-cabecalho {
+          padding: 6px 8px !important;
+        }
+
+        .cola-miniatura-estilizada .cola-cabecalho h2 {
+          font-size: 0.65rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-cabecalho span {
+          font-size: 0.35rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-cabecalho > strong {
+          width: 20px !important;
+          min-width: 20px !important;
+          height: 20px !important;
+          font-size: 0.45rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-instrucao {
+          padding: 3px 8px !important;
+          font-size: 0.38rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-candidatos {
+          padding: 2px 8px !important;
+        }
+
+        .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: 12px 18px minmax(0, 1fr) auto !important;
+          gap: 4px !important;
+        }
+
+        .cola-miniatura-estilizada .cola-ordem {
+          width: 12px !important;
+          height: 12px !important;
+          font-size: 0.35rem !important;
+        }
+
+        .cola-miniatura-estilizada .foto-na-cola,
+        .cola-miniatura-estilizada .iniciais-cola {
+          width: 18px !important;
+          min-width: 18px !important;
+          height: 18px !important;
+          font-size: 0.35rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-dados small {
+          font-size: 0.32rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-dados strong {
+          font-size: 0.42rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-dados em {
+          font-size: 0.32rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-candidato > b {
+          font-size: 0.65rem !important;
+        }
+
+        .cola-miniatura-estilizada .cola-rodape {
+          padding: 4px 8px !important;
+          font-size: 0.32rem !important;
+        }
+
+        /* A prévia 2x2 preserva todos os candidatos e o rodapé de cada cola. */
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada {
+          width: 100% !important;
+          height: 100% !important;
+          max-height: 100% !important;
+          min-height: 0 !important;
+          align-self: stretch !important;
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-cabecalho {
+          gap: 4px !important;
+          padding: 4px 6px !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          h2 {
+          font-size: 0.55rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          span {
+          margin-bottom: 1px !important;
+          font-size: 0.29rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          > strong {
+          width: 17px !important;
+          min-width: 17px !important;
+          height: 17px !important;
+          font-size: 0.36rem !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-instrucao {
+          padding: 2px 6px !important;
+          font-size: 0.28rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidatos {
+          min-height: 0 !important;
+          padding: 1px 6px !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: 10px 13px minmax(0, 1fr) auto !important;
+          gap: 3px !important;
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-ordem {
+          width: 10px !important;
+          height: 10px !important;
+          font-size: 0.28rem !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .iniciais-cola {
+          width: 12px !important;
+          min-width: 12px !important;
+          height: 12px !important;
+          border-width: 1px !important;
+          font-size: 0.27rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-dados
+          small {
+          margin-bottom: 0 !important;
+          font-size: 0.24rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.33rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-dados em {
+          margin-top: 0 !important;
+          font-size: 0.24rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-candidato
+          > b {
+          font-size: 0.52rem !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-rodape {
+          gap: 2px !important;
+          padding: 2px 6px !important;
+          font-size: 0.24rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-rodape
+          strong {
+          max-width: 68px !important;
+        }
+
+        /* A opção única mostra a cola no tamanho proporcional de meia folha A4. */
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada {
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .cola-cabecalho {
+          padding: 4px 6px !important;
+        }
+
+        .folha-a4-preview.copias-1
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          h2 {
+          font-size: 0.55rem !important;
+        }
+
+        .folha-a4-preview.copias-1
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          > strong {
+          width: 17px !important;
+          min-width: 17px !important;
+          height: 17px !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .cola-instrucao {
+          padding: 2px 6px !important;
+          font-size: 0.28rem !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .cola-candidatos {
+          padding: 1px 6px !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: 10px 13px minmax(0, 1fr) auto !important;
+          gap: 3px !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .cola-ordem {
+          width: 10px !important;
+          height: 10px !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .iniciais-cola {
+          width: 12px !important;
+          min-width: 12px !important;
+          height: 12px !important;
+          border-width: 1px !important;
+        }
+
+        .folha-a4-preview.copias-1
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.33rem !important;
+        }
+
+        .folha-a4-preview.copias-1
+          .cola-miniatura-estilizada
+          .cola-candidato
+          > b {
+          font-size: 0.52rem !important;
+        }
+
+        .folha-a4-preview.copias-1 .cola-miniatura-estilizada .cola-rodape {
+          padding: 2px 6px !important;
+          font-size: 0.24rem !important;
+        }
+
+        /* A prévia 2x3 precisa ser mais compacta que os cartões de 1 e 4 cópias. */
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-cabecalho {
+          gap: 3px !important;
+          padding: 3px 5px !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada {
+          width: 100% !important;
+          height: 100% !important;
+          max-height: 100% !important;
+          align-self: stretch !important;
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          h2 {
+          font-size: 0.5rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          span {
+          margin-bottom: 1px !important;
+          font-size: 0.27rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-cabecalho
+          > strong {
+          width: 16px !important;
+          min-width: 16px !important;
+          height: 16px !important;
+          font-size: 0.34rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-instrucao {
+          padding: 2px 5px !important;
+          font-size: 0.27rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidatos {
+          min-height: 0 !important;
+          padding: 1px 5px !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: 9px 12px minmax(0, 1fr) auto !important;
+          gap: 2px !important;
+          overflow: hidden !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-ordem {
+          width: 9px !important;
+          height: 9px !important;
+          font-size: 0.26rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .iniciais-cola {
+          width: 11px !important;
+          min-width: 11px !important;
+          height: 11px !important;
+          border-width: 1px !important;
+          font-size: 0.25rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-dados
+          small {
+          margin-bottom: 0 !important;
+          font-size: 0.23rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.31rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-dados em {
+          margin-top: 0 !important;
+          font-size: 0.23rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-candidato
+          > b {
+          font-size: 0.49rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-rodape {
+          gap: 2px !important;
+          padding: 2px 5px !important;
+          font-size: 0.23rem !important;
+          line-height: 1 !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-rodape
+          strong {
+          max-width: 62px !important;
+        }
+
+        /* ESTILO OFICIAL DA COLA ELEITORAL CONFORME A IMAGEM */
         .resumo.resumo-formato-final {
           padding: 0;
           overflow: visible;
@@ -1355,11 +1727,11 @@ export default function Home() {
           aspect-ratio: 105 / 148.5;
           flex-direction: column;
           overflow: hidden;
-          border: 2px solid #20372f;
+          border: 2px solid #1a3328;
           border-radius: 16px;
           background: #ffffff;
-          color: #20372f;
-          box-shadow: 0 14px 35px rgba(32, 55, 47, 0.16);
+          color: #1a3328;
+          box-shadow: 0 14px 35px rgba(26, 51, 40, 0.16);
         }
 
         .resumo-formato-final > .botao-gerar {
@@ -1372,179 +1744,180 @@ export default function Home() {
           margin: 12px 0 0;
         }
 
-        .previa-final {
-          display: flex;
-          width: min(360px, 100%);
-          aspect-ratio: 105 / 148.5;
-          flex-direction: column;
-          overflow: hidden;
-          border: 2px solid #20372f;
-          border-radius: 16px;
-          background: #ffffff;
-          color: #20372f;
-          box-shadow: 0 14px 35px rgba(32, 55, 47, 0.2);
-        }
-
-        :is(.previa-final, .resumo-cola-final) .cola-cabecalho {
+        /* CABEÇALHO VERDE ESCURO COM MARGEM SUPERIOR ARREDONDADA */
+        .resumo-cola-final .cola-cabecalho {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 12px;
-          padding: 16px 18px 14px;
-          background: #20372f;
-          color: #f9f6eb;
+          padding: 16px 20px;
+          background: #1a3328;
+          color: #ffffff;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-cabecalho span {
+        .resumo-cola-final .cola-cabecalho span {
           display: block;
-          margin-bottom: 3px;
-          color: #f1ca30;
-          font-size: 0.57rem;
+          margin-bottom: 2px;
+          color: #e5b324;
+          font-size: 0.62rem;
           font-weight: 800;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.12em;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-cabecalho h2 {
+        .resumo-cola-final .cola-cabecalho h2 {
           margin: 0;
-          color: #f9f6eb;
-          font-size: 1.25rem;
-          line-height: 1;
-          letter-spacing: -0.03em;
+          color: #ffffff;
+          font-size: 1.35rem;
+          font-weight: 700;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
         }
 
-        :is(.previa-final, .resumo-cola-final)
-          .cola-cabecalho
-          > strong {
+        /* CIRCULO DO ESTADO */
+        .resumo-cola-final .cola-cabecalho > strong {
           display: grid;
           place-items: center;
-          width: 43px;
-          min-width: 43px;
-          height: 43px;
+          width: 44px;
+          min-width: 44px;
+          height: 44px;
           border-radius: 50%;
-          background: #f1ca30;
-          color: #20372f;
-          font-size: 0.8rem;
+          background: #e5b324;
+          color: #1a3328;
+          font-size: 0.85rem;
+          font-weight: 800;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-instrucao {
+        /* FAIXA BEGE DE INSTRUÇÃO */
+        .resumo-cola-final .cola-instrucao {
           margin: 0;
-          padding: 8px 18px;
-          border-bottom: 1px solid #d9ded8;
-          background: #f9f6eb;
-          color: #4e5d57;
+          padding: 8px 20px;
+          border-bottom: 1px solid #e2ded0;
+          background: #f7f4ea;
+          color: #525048;
           font-size: 0.65rem;
           line-height: 1.2;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-candidatos {
+        /* LISTA DOS CANDIDATOS */
+        .resumo-cola-final .cola-candidatos {
           display: flex;
           flex: 1;
           flex-direction: column;
-          padding: 4px 18px;
+          padding: 4px 20px;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-candidato {
+        .resumo-cola-final .cola-candidato {
           display: grid;
-          grid-template-columns: 26px 38px minmax(0, 1fr) auto;
+          grid-template-columns: 26px 42px minmax(0, 1fr) auto;
           flex: 1;
           align-items: center;
-          gap: 9px;
+          gap: 10px;
           min-height: 0;
-          border-bottom: 1px solid #d9ded8;
+          border-bottom: 1px solid #e8e6df;
         }
 
-        :is(.previa-final, .resumo-cola-final)
-          .cola-candidato:last-child {
+        .resumo-cola-final .cola-candidato:last-child {
           border-bottom: 0;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-ordem {
+        /* BOTAO VERDE COM NUMERO DE ORDEM */
+        .resumo-cola-final .cola-ordem {
           display: grid;
           place-items: center;
-          width: 23px;
-          height: 23px;
+          width: 24px;
+          height: 24px;
           border-radius: 50%;
           background: #518e45;
           color: #ffffff;
-          font-size: 0.6rem;
+          font-size: 0.65rem;
           font-weight: 800;
         }
 
-        :is(.previa-final, .resumo-cola-final) .foto-na-cola,
-        :is(.previa-final, .resumo-cola-final) .iniciais-cola {
+        /* FOTO DO CANDIDATO */
+        .resumo-cola-final .foto-na-cola,
+        .resumo-cola-final .iniciais-cola {
           display: grid;
           place-items: center;
-          width: 38px;
-          min-width: 38px;
-          height: 38px;
+          width: 40px;
+          min-width: 40px;
+          height: 40px;
           overflow: hidden;
-          border: 2px solid rgba(81, 142, 69, 0.3);
+          border: 2px solid #518e45;
           border-radius: 50%;
-          background: #f9f6eb;
-          color: #20372f;
-          font-size: 0.62rem;
+          background: #f7f4ea;
+          color: #1a3328;
+          font-size: 0.68rem;
           font-weight: 900;
           object-fit: cover;
           object-position: center top;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-dados {
+        /* NOME, CARGO E PARTIDO */
+        .resumo-cola-final .cola-dados {
           display: flex;
           min-width: 0;
           flex-direction: column;
           justify-content: center;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-dados small {
-          margin-bottom: 2px;
-          color: #69736f;
+        .resumo-cola-final .cola-dados small {
+          margin-bottom: 1px;
+          color: #6d726f;
           font-size: 0.52rem;
+          font-weight: 800;
+          line-height: 1;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .resumo-cola-final .cola-dados strong {
+          overflow: hidden;
+          color: #1a3328;
+          font-size: 0.88rem;
+          font-weight: 900;
+          line-height: 1.1;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          text-transform: uppercase;
+        }
+
+        .resumo-cola-final .cola-dados em {
+          margin-top: 2px;
+          color: #518e45;
+          font-size: 0.55rem;
+          font-style: normal;
           font-weight: 800;
           line-height: 1;
           text-transform: uppercase;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-dados strong {
-          overflow: hidden;
-          color: #20372f;
-          font-size: 0.86rem;
+        /* NUMERO GRANDE DO VOTO */
+        .resumo-cola-final .cola-candidato > b {
+          color: #1a3328;
+          font-size: 1.5rem;
           font-weight: 900;
-          line-height: 1.05;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        :is(.previa-final, .resumo-cola-final) .cola-dados em {
-          margin-top: 2px;
-          color: #518e45;
-          font-size: 0.52rem;
-          font-style: normal;
-          font-weight: 700;
           line-height: 1;
+          letter-spacing: -0.02em;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-candidato > b {
-          color: #20372f;
-          font-size: 1.45rem;
-          font-weight: 950;
-          line-height: 1;
-        }
-
-        :is(.previa-final, .resumo-cola-final) .cola-rodape {
+        /* RODAPÉ AMARELO */
+        .resumo-cola-final .cola-rodape {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 8px;
-          padding: 9px 18px;
-          background: #f1ca30;
-          color: #20372f;
-          font-size: 0.52rem;
+          padding: 10px 20px;
+          background: #e5b324;
+          color: #1a3328;
+          font-size: 0.55rem;
+          font-weight: 700;
           line-height: 1.15;
         }
 
-        :is(.previa-final, .resumo-cola-final) .cola-rodape strong {
-          max-width: 180px;
+        .resumo-cola-final .cola-rodape strong {
+          max-width: 200px;
           text-align: right;
+          font-weight: 800;
         }
 
         .opcoes-copias {
@@ -1555,7 +1928,7 @@ export default function Home() {
 
         .opcoes-copias legend {
           margin-bottom: 10px;
-          color: #20372f;
+          color: #1a3328;
           font-weight: 800;
         }
 
@@ -1573,7 +1946,7 @@ export default function Home() {
           border: 2px solid #d8ddd9;
           border-radius: 14px;
           background: #ffffff;
-          color: #20372f;
+          color: #1a3328;
           text-align: left;
           cursor: pointer;
         }
@@ -1611,125 +1984,247 @@ export default function Home() {
         .botao-voltar-impressao {
           border: 1px solid #b8c0bc;
           background: transparent;
-          color: #20372f;
+          color: #1a3328;
         }
 
         .botao-confirmar-impressao {
-          border: 1px solid #20372f;
-          background: #20372f;
+          border: 1px solid #1a3328;
+          background: #1a3328;
           color: #f9f6eb;
         }
 
         @media (max-width: 620px) {
           .fundo-modal-impressao {
-            padding: 12px;
+            place-items: start center;
+            padding: 8px;
           }
 
           .modal-impressao {
-            max-height: calc(100vh - 24px);
-            border-radius: 18px;
+            width: 100%;
+            max-height: calc(100vh - 16px);
+            max-height: calc(100dvh - 16px);
+            border-radius: 16px;
           }
 
-          .modal-impressao-topo,
-          .modal-impressao-acoes {
-            padding-right: 20px;
-            padding-left: 20px;
+          .modal-impressao-topo {
+            gap: 12px;
+            padding: 18px 16px 15px;
+          }
+
+          .modal-impressao-topo h2 {
+            font-size: 1.35rem;
+          }
+
+          .modal-impressao-topo button {
+            width: 34px;
+            min-width: 34px;
+            height: 34px;
           }
 
           .area-previa-final {
-            padding-right: 20px;
-            padding-left: 20px;
+            padding: 14px 16px;
           }
 
           .opcoes-copias {
-            padding-right: 20px;
-            padding-left: 20px;
+            padding: 0 16px;
+          }
+
+          .grid-opcoes-copias {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 7px;
+          }
+
+          .opcoes-copias button {
+            min-width: 0;
+            padding: 11px 8px;
+            text-align: center;
+          }
+
+          .opcoes-copias button strong {
+            font-size: 0.82rem;
+          }
+
+          .opcoes-copias button span {
+            display: none;
+          }
+
+          .modal-impressao-acoes {
+            flex-direction: column-reverse;
+            gap: 8px;
+            padding: 16px;
+          }
+
+          .modal-impressao-acoes button {
+            width: 100%;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .area-previa-final {
+            padding-right: 10px;
+            padding-left: 10px;
           }
 
           .grid-opcoes-copias {
             grid-template-columns: 1fr;
           }
 
-          .modal-impressao-acoes {
-            flex-direction: column-reverse;
+          .opcoes-copias button span {
+            display: block;
           }
         }
 
+        /* REGRAS DE IMPRESSÃO - MANTÉM DESIGN EXATO DO CARD */
         @media print {
-  /* Esconde absolutamente tudo no body */
-  body * {
-    visibility: hidden !important;
-  }
+          body * {
+            visibility: hidden !important;
+          }
 
-  /* Deixa visível apenas a área de impressão e seus filhos */
-  .folha-impressao-real,
-  .folha-impressao-real * {
-    visibility: visible !important;
-  }
+          .folha-impressao-real,
+          .folha-impressao-real * {
+            visibility: visible !important;
+          }
 
-  /* Força a área de impressão a ocupar a folha A4 e sobrepor a tela */
-  .folha-impressao-real {
-    display: grid !important;
-    position: fixed !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 210mm !important;
-    height: 297mm !important;
-    margin: 0 !important;
-    padding: 8mm !important;
-    box-sizing: border-box !important;
-    background: #ffffff !important;
-    z-index: 999999 !important;
-  }
+          .folha-impressao-real {
+            display: grid !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
+            margin: 0 !important;
+            padding: 8mm !important;
+            box-sizing: border-box !important;
+            background: #ffffff !important;
+            z-index: 999999 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
 
-  /* Layout para 1 Cópia na folha */
-  .folha-impressao-real.copias-1 {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
+          .folha-impressao-real.copias-1 {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
 
-  .folha-impressao-real.copias-1 .cola-impressa {
-    width: 70% !important;
-    max-height: 90% !important;
-  }
+          .folha-impressao-real.copias-1 .cola-impressa-fidelidade {
+            width: 105mm !important;
+            height: 148.5mm !important;
+          }
 
-  /* Layout para 4 Cópias na folha (Grid 2x2) */
-  .folha-impressao-real.copias-4 {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: 1fr 1fr !important;
-    gap: 8mm !important;
-  }
+          .folha-impressao-real.copias-4 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: 1fr 1fr !important;
+            gap: 6mm !important;
+          }
 
-  /* Layout para 6 Cópias na folha (Grid 2x3) */
-  .folha-impressao-real.copias-6 {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: repeat(3, 1fr) !important;
-    gap: 5mm !important;
-  }
+          .folha-impressao-real.copias-6 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: repeat(3, 1fr) !important;
+            gap: 4mm !important;
+          }
 
-  /* Estilo visual de cada cartão impresso */
-  .cola-impressa {
-    border: 2px solid #20372f !important;
-    border-radius: 8px !important;
-    padding: 8px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    background: #ffffff !important;
-    box-sizing: border-box !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
+          .cola-impressa-fidelidade {
+            width: 100% !important;
+            height: 100% !important;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            aspect-ratio: auto !important;
+            overflow: hidden !important;
+            border: 2px solid #1a3328 !important;
+            border-radius: 12px !important;
+            background: #ffffff !important;
+            box-sizing: border-box !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
 
-  /* Remove cabeçalhos/rodapés padrão do navegador se configurado */
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
-}
+          .folha-impressao-real.copias-6 .cola-cabecalho {
+            gap: 2mm !important;
+            padding: 2.2mm 3mm !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-cabecalho span {
+            margin-bottom: 0.3mm !important;
+            font-size: 5pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-cabecalho h2 {
+            font-size: 10pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-cabecalho > strong {
+            width: 8mm !important;
+            min-width: 8mm !important;
+            height: 8mm !important;
+            font-size: 6.5pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-instrucao {
+            padding: 1.2mm 3mm !important;
+            font-size: 5.2pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-candidatos {
+            padding: 0.5mm 3mm !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-candidato {
+            grid-template-columns: 4.5mm 7mm minmax(0, 1fr) auto !important;
+            gap: 1.3mm !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-ordem {
+            width: 4.5mm !important;
+            height: 4.5mm !important;
+            font-size: 5.5pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .foto-na-cola,
+          .folha-impressao-real.copias-6 .iniciais-cola {
+            width: 7mm !important;
+            min-width: 7mm !important;
+            height: 7mm !important;
+            border-width: 0.3mm !important;
+            font-size: 5pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-dados small {
+            margin-bottom: 0.2mm !important;
+            font-size: 4.5pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-dados strong {
+            font-size: 7.5pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-dados em {
+            margin-top: 0.3mm !important;
+            font-size: 4.7pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-candidato > b {
+            font-size: 13pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-rodape {
+            gap: 1mm !important;
+            padding: 1.3mm 3mm !important;
+            font-size: 4.6pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-rodape strong {
+            max-width: 40mm !important;
+          }
+
+          @page {
+            size: A4 portrait;
+            margin: 0;
+          }
         }
       `}</style>
     </main>
