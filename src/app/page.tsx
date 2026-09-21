@@ -207,6 +207,8 @@ export default function Home() {
   const [formatoImagem, setFormatoImagem] =
     useState<FormatoImagem>("publicacao");
   const [gerandoImagem, setGerandoImagem] = useState(false);
+  const [imagemGeradaUrl, setImagemGeradaUrl] = useState("");
+  const [modalImagemAberto, setModalImagemAberto] = useState(false);
   const [candidatos, setCandidatos] = useState<Candidato[]>([]);
   const [carregandoCandidatos, setCarregandoCandidatos] = useState(true);
   const [erroCandidatos, setErroCandidatos] = useState("");
@@ -492,7 +494,7 @@ export default function Home() {
     window.print();
   }
 
-  async function baixarImagem(formato: FormatoImagem) {
+  async function gerarPreviaImagem(formato: FormatoImagem) {
     if (gerandoImagem) return;
 
     setGerandoImagem(true);
@@ -521,10 +523,8 @@ export default function Home() {
         backgroundColor: "#f7f4ea",
       });
 
-      const link = document.createElement("a");
-      link.download = `minha-cola-eleitoral-${formato}-${estado}.png`;
-      link.href = url;
-      link.click();
+      setImagemGeradaUrl(url);
+      setModalImagemAberto(true);
     } catch (erro) {
       console.error(erro);
       window.alert(
@@ -533,6 +533,15 @@ export default function Home() {
     } finally {
       setGerandoImagem(false);
     }
+  }
+
+  function baixarImagem() {
+    if (!imagemGeradaUrl) return;
+
+    const link = document.createElement("a");
+    link.download = `minha-cola-eleitoral-${formatoImagem}-${estado}.png`;
+    link.href = imagemGeradaUrl;
+    link.click();
   }
 
   function abrirCargo(cargoId: CargoId) {
@@ -1193,7 +1202,7 @@ export default function Home() {
                 type="button"
                 className="botao-imagem"
                 disabled={gerandoImagem}
-                onClick={() => baixarImagem("story")}
+                onClick={() => gerarPreviaImagem("story")}
               >
                 {gerandoImagem && formatoImagem === "story"
                   ? "Gerando..."
@@ -1204,7 +1213,7 @@ export default function Home() {
                 type="button"
                 className="botao-imagem"
                 disabled={gerandoImagem}
-                onClick={() => baixarImagem("publicacao")}
+                onClick={() => gerarPreviaImagem("publicacao")}
               >
                 {gerandoImagem && formatoImagem === "publicacao"
                   ? "Gerando..."
@@ -1217,6 +1226,61 @@ export default function Home() {
                 onClick={imprimirCola}
               >
                 Imprimir folha A4
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {modalImagemAberto && imagemGeradaUrl && (
+        <div
+          className="fundo-modal-imagem"
+          role="presentation"
+          onMouseDown={() => setModalImagemAberto(false)}
+        >
+          <section
+            className="modal-imagem"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-previa-imagem"
+            onMouseDown={(evento) => evento.stopPropagation()}
+          >
+            <header className="modal-imagem-topo">
+              <div>
+                <span>PRÉ-VISUALIZAÇÃO</span>
+                <h2 id="titulo-previa-imagem">
+                  Imagem para{" "}
+                  {formatoImagem === "story" ? "Story" : "publicação"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                aria-label="Fechar pré-visualização da imagem"
+                onClick={() => setModalImagemAberto(false)}
+              >
+                ×
+              </button>
+            </header>
+
+            <div className={`previa-imagem formato-${formatoImagem}`}>
+              {/* A imagem já está pronta; esta etapa serve para conferência. */}
+              <img src={imagemGeradaUrl} alt="Prévia da cola eleitoral" />
+            </div>
+
+            <div className="modal-imagem-acoes">
+              <button
+                type="button"
+                className="botao-voltar-impressao"
+                onClick={() => setModalImagemAberto(false)}
+              >
+                Voltar
+              </button>
+              <button
+                type="button"
+                className="botao-confirmar-impressao"
+                onClick={baixarImagem}
+              >
+                Baixar PNG
               </button>
             </div>
           </section>
@@ -1531,6 +1595,125 @@ export default function Home() {
           margin: 28px 0 0;
           font-size: 20px;
           font-weight: 800;
+        }
+
+        .fundo-modal-imagem {
+          position: fixed;
+          inset: 0;
+          z-index: 12000;
+          display: grid;
+          place-items: center;
+          padding: 20px;
+          background: rgba(10, 27, 21, 0.78);
+          backdrop-filter: blur(8px);
+        }
+
+        .modal-imagem {
+          width: min(620px, 100%);
+          max-height: calc(100dvh - 40px);
+          overflow: auto;
+          border: 1px solid rgba(249, 246, 235, 0.22);
+          border-radius: 22px;
+          background: #f9f6eb;
+          box-shadow: 0 26px 80px rgba(0, 0, 0, 0.38);
+        }
+
+        .modal-imagem-topo {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 18px;
+          padding: 20px 24px;
+          background: #1a3328;
+          color: #f9f6eb;
+        }
+
+        .modal-imagem-topo span {
+          color: #f1ca30;
+          font-size: 0.68rem;
+          font-weight: 900;
+          letter-spacing: 0.13em;
+        }
+
+        .modal-imagem-topo h2 {
+          margin: 4px 0 0;
+          color: #f9f6eb;
+          font-size: 1.45rem;
+        }
+
+        .modal-imagem-topo button {
+          display: grid;
+          place-items: center;
+          width: 36px;
+          min-width: 36px;
+          height: 36px;
+          border: 1px solid rgba(249, 246, 235, 0.32);
+          border-radius: 50%;
+          background: transparent;
+          color: #ffffff;
+          font-size: 1.55rem;
+          cursor: pointer;
+        }
+
+        .previa-imagem {
+          display: flex;
+          justify-content: center;
+          padding: 22px;
+          background:
+            linear-gradient(rgba(26, 51, 40, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(26, 51, 40, 0.05) 1px, transparent 1px),
+            #ece9df;
+          background-size: 18px 18px;
+        }
+
+        .previa-imagem img {
+          display: block;
+          width: auto;
+          max-width: 100%;
+          max-height: min(62dvh, 720px);
+          border: 1px solid rgba(26, 51, 40, 0.18);
+          background: #f7f4ea;
+          box-shadow: 0 14px 35px rgba(26, 51, 40, 0.18);
+          object-fit: contain;
+        }
+
+        .modal-imagem-acoes {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+          padding: 18px 24px 22px;
+        }
+
+        .modal-imagem-acoes button {
+          min-height: 46px;
+          padding: 0 22px;
+          border-radius: 12px;
+          font-weight: 800;
+          cursor: pointer;
+        }
+
+        @media (max-width: 620px) {
+          .fundo-modal-imagem {
+            padding: 8px;
+          }
+
+          .modal-imagem-topo {
+            padding: 16px;
+          }
+
+          .previa-imagem {
+            padding: 12px;
+          }
+
+          .previa-imagem img {
+            max-height: 60dvh;
+          }
+
+          .modal-imagem-acoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 14px 16px 16px;
+          }
         }
 
         .pagina button:focus-visible,
