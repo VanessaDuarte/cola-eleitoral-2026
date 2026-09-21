@@ -1656,307 +1656,80 @@ export default function Home() {
         }
 
         @media print {
-          @page {
-            size: A4 portrait;
-            margin: 0;
-          }
+  /* Esconde absolutamente tudo no body */
+  body * {
+    visibility: hidden !important;
+  }
 
-          html,
-          body {
-            width: 210mm;
-            height: 297mm;
-            margin: 0 !important;
-            padding: 0 !important;
-            background: #f9f6eb !important;
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-          }
+  /* Deixa visível apenas a área de impressão e seus filhos */
+  .folha-impressao-real,
+  .folha-impressao-real * {
+    visibility: visible !important;
+  }
 
-          .pagina > :not(.folha-impressao) {
-            display: none !important;
-          }
+  /* Força a área de impressão a ocupar a folha A4 e sobrepor a tela */
+  .folha-impressao-real {
+    display: grid !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 8mm !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    z-index: 999999 !important;
+  }
 
-          .pagina {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0;
-            padding: 0;
-            background: #f9f6eb;
-          }
+  /* Layout para 1 Cópia na folha */
+  .folha-impressao-real.copias-1 {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
 
-          .folha-impressao {
-            display: grid !important;
-            width: 210mm;
-            height: 297mm;
-            padding: 6mm;
-            box-sizing: border-box;
-            overflow: hidden;
-            background: #f9f6eb;
-          }
+  .folha-impressao-real.copias-1 .cola-impressa {
+    width: 70% !important;
+    max-height: 90% !important;
+  }
 
-          /* Modo 1 Cópia */
-          .folha-impressao.uma-copia {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-          }
+  /* Layout para 4 Cópias na folha (Grid 2x2) */
+  .folha-impressao-real.copias-4 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+    gap: 8mm !important;
+  }
 
-          .folha-impressao.uma-copia .cola-impressa {
-            width: 96mm;
-            height: 139.5mm;
-          }
+  /* Layout para 6 Cópias na folha (Grid 2x3) */
+  .folha-impressao-real.copias-6 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: repeat(3, 1fr) !important;
+    gap: 5mm !important;
+  }
 
-          /* Modo 4 Cópias (2x2) */
-          .folha-impressao.quatro-copias {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 4mm;
-          }
+  /* Estilo visual de cada cartão impresso */
+  .cola-impressa {
+    border: 2px solid #20372f !important;
+    border-radius: 8px !important;
+    padding: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 
-          /* Modo 6 Cópias (2x3) */
-          .folha-impressao.seis-copias {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 3mm;
-            padding: 4mm;
-          }
-
-          .cola-impressa {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            min-height: 0;
-            overflow: hidden;
-            border: 0.45mm solid #20372f;
-            border-radius: 4mm;
-            background: #ffffff;
-            color: #20372f;
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-
-          .cola-cabecalho {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 3mm;
-            padding: 4mm 4.5mm 3.5mm;
-            background: #20372f;
-            color: #f9f6eb;
-          }
-
-          .cola-cabecalho span {
-            display: block;
-            margin-bottom: 0.8mm;
-            color: #f1ca30;
-            font-size: 6.5pt;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-          }
-
-          .cola-cabecalho h2 {
-            margin: 0;
-            color: #f9f6eb;
-            font-size: 15pt;
-            line-height: 1;
-            letter-spacing: -0.03em;
-          }
-
-          .cola-cabecalho > strong {
-            display: grid;
-            place-items: center;
-            min-width: 12mm;
-            height: 12mm;
-            border-radius: 50%;
-            background: #f1ca30;
-            color: #20372f;
-            font-size: 9pt;
-          }
-
-          .cola-instrucao {
-            margin: 0;
-            padding: 2.2mm 4.5mm;
-            border-bottom: 0.3mm solid #d9ded8;
-            background: #f9f6eb;
-            color: #4e5d57;
-            font-size: 7.2pt;
-            line-height: 1.2;
-          }
-
-          .cola-candidatos {
-            display: flex;
-            flex: 1;
-            flex-direction: column;
-            padding: 1mm 4.5mm;
-          }
-
-          .cola-candidato {
-            display: grid;
-            grid-template-columns: 6mm 10mm minmax(0, 1fr) auto;
-            flex: 1;
-            align-items: center;
-            gap: 2.2mm;
-            min-height: 0;
-            border-bottom: 0.25mm solid #d9ded8;
-          }
-
-          .cola-candidato:last-child {
-            border-bottom: 0;
-          }
-
-          .cola-ordem {
-            display: grid;
-            place-items: center;
-            width: 6mm;
-            height: 6mm;
-            border-radius: 50%;
-            background: #518e45;
-            color: #ffffff;
-            font-size: 7pt;
-            font-weight: 800;
-          }
-
-          .foto-na-cola,
-          .iniciais-cola {
-            display: grid;
-            place-items: center;
-            width: 9mm;
-            min-width: 9mm;
-            height: 9mm;
-            overflow: hidden;
-            border: 0.35mm solid rgba(81, 142, 69, 0.4);
-            border-radius: 50%;
-            background: #f9f6eb;
-            color: #20372f;
-            font-size: 6pt;
-            font-weight: 900;
-            object-fit: cover;
-            object-position: center top;
-          }
-
-          .cola-dados {
-            display: flex;
-            min-width: 0;
-            flex-direction: column;
-            justify-content: center;
-          }
-
-          .cola-dados small {
-            margin-bottom: 0.4mm;
-            color: #69736f;
-            font-size: 6.2pt;
-            font-weight: 700;
-            line-height: 1;
-            text-transform: uppercase;
-          }
-
-          .cola-dados strong {
-            overflow: hidden;
-            color: #20372f;
-            font-size: 11.5pt;
-            font-weight: 900;
-            line-height: 1.05;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-
-          .cola-dados em {
-            margin-top: 0.5mm;
-            color: #518e45;
-            font-size: 6.3pt;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 1;
-          }
-
-          .cola-candidato > b {
-            color: #20372f;
-            font-size: 20pt;
-            font-weight: 950;
-            line-height: 1;
-            letter-spacing: 0.02em;
-          }
-
-          .cola-rodape {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2mm;
-            padding: 2.4mm 4.5mm;
-            background: #f1ca30;
-            color: #20372f;
-            font-size: 6.3pt;
-            line-height: 1.15;
-          }
-
-          .cola-rodape strong {
-            max-width: 48mm;
-            text-align: right;
-          }
-
-          /* Otimizações de fontes e tamanhos exclusivas para o layout de 6 cópias */
-          .folha-impressao.seis-copias .cola-cabecalho {
-            padding: 2mm 3.5mm;
-          }
-
-          .folha-impressao.seis-copias .cola-cabecalho h2 {
-            font-size: 11pt;
-          }
-
-          .folha-impressao.seis-copias .cola-cabecalho > strong {
-            min-width: 8mm;
-            height: 8mm;
-            font-size: 7.5pt;
-          }
-
-          .folha-impressao.seis-copias .cola-instrucao {
-            padding: 1mm 3.5mm;
-            font-size: 5.8pt;
-          }
-
-          .folha-impressao.seis-copias .cola-candidatos {
-            padding: 0.5mm 3.5mm;
-          }
-
-          .folha-impressao.seis-copias .cola-candidato {
-            grid-template-columns: 4.5mm 7mm minmax(0, 1fr) auto;
-            gap: 1.5mm;
-          }
-
-          .folha-impressao.seis-copias .cola-ordem {
-            width: 4.5mm;
-            height: 4.5mm;
-            font-size: 5.5pt;
-          }
-
-          .folha-impressao.seis-copias .foto-na-cola,
-          .folha-impressao.seis-copias .iniciais-cola {
-            width: 7mm;
-            min-width: 7mm;
-            height: 7mm;
-            font-size: 5pt;
-          }
-
-          .folha-impressao.seis-copias .cola-dados small {
-            font-size: 4.8pt;
-          }
-
-          .folha-impressao.seis-copias .cola-dados strong {
-            font-size: 8.5pt;
-          }
-
-          .folha-impressao.seis-copias .cola-dados em {
-            font-size: 4.8pt;
-          }
-
-          .folha-impressao.seis-copias .cola-candidato > b {
-            font-size: 14pt;
-          }
-
-          .folha-impressao.seis-copias .cola-rodape {
-            padding: 1.5mm 3.5mm;
-            font-size: 5pt;
-          }
+  /* Remove cabeçalhos/rodapés padrão do navegador se configurado */
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
         }
       `}</style>
     </main>
