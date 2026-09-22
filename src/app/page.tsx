@@ -511,6 +511,23 @@ export default function Home() {
       const arte = arteSocialRef.current;
       if (!arte) throw new Error("Arte não encontrada.");
 
+      const imagens = Array.from(arte.querySelectorAll("img"));
+      await Promise.all(
+        imagens.map(async (imagem) => {
+          if (!imagem.complete) {
+            await new Promise<void>((resolver) => {
+              const concluir = () => resolver();
+              imagem.addEventListener("load", concluir, { once: true });
+              imagem.addEventListener("error", concluir, { once: true });
+            });
+          }
+
+          if (typeof imagem.decode === "function") {
+            await imagem.decode().catch(() => undefined);
+          }
+        }),
+      );
+
       const largura = 1080;
       const altura = formato === "story" ? 1920 : 1350;
       const url = await toPng(arte, {
@@ -1355,74 +1372,83 @@ export default function Home() {
         ))}
       </section>
 
-      <section
-        ref={arteSocialRef}
-        className={`arte-social formato-${formatoImagem}`}
-        aria-hidden="true"
-      >
-        <div className="arte-social-decoracao" />
-        <div className="arte-social-conteudo">
-          <span className="arte-social-selo">ELEIÇÕES 2026</span>
-          <h2>Minha cola eleitoral</h2>
-          <p>Meus candidatos e números para o dia da votação.</p>
-
-          <article className="resumo-cola-final cola-social">
-            <header className="cola-cabecalho">
-              <div>
-                <span>ELEIÇÕES 2026</span>
-                <h2>Minha Cola Eleitoral</h2>
-              </div>
-              <strong>{estado}</strong>
-            </header>
-
-            <div className="cola-candidatos">
-              {cargos.map((cargo) => {
-                const candidato = selecionados[cargo.id];
-                return (
-                  <div
-                    className={`cola-candidato ${
-                      candidato ? "" : "cola-candidato-vazio"
-                    }`}
-                    key={cargo.id}
-                  >
-                    <span className="cola-ordem">{cargo.ordem}</span>
-                    {candidato ? (
-                      <>
-                        <FotoNaCola candidato={candidato} />
-                        <span className="cola-dados">
-                          <small>{obterTituloCargo(cargo, estado)}</small>
-                          <strong>{candidato.nome}</strong>
-                          <em>{candidato.partido}</em>
-                        </span>
-                        <b>{candidato.numero}</b>
-                      </>
-                    ) : (
-                      <>
-                        <span className="cola-dados cola-dados-vazio">
-                          <small>{obterTituloCargo(cargo, estado)}</small>
-                          <span className="linha-preenchimento-manual" />
-                        </span>
-                        <span className="digitos-preenchimento-manual">
-                          {Array.from(
-                            { length: cargo.digitos },
-                            (_, indice) => (
-                              <i key={indice} />
-                            ),
-                          )}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </article>
-
-          <p className="arte-social-aviso">
-            Confira os números antes de votar.
-          </p>
+      {gerandoImagem && (
+        <div className="fundo-geracao-imagem" role="status" aria-live="polite">
+          <span className="indicador-geracao" />
+          <strong>Gerando imagem…</strong>
         </div>
-      </section>
+      )}
+
+      {gerandoImagem && (
+        <section
+          ref={arteSocialRef}
+          className={`arte-social formato-${formatoImagem}`}
+          aria-hidden="true"
+        >
+          <div className="arte-social-decoracao" />
+          <div className="arte-social-conteudo">
+            <span className="arte-social-selo">ELEIÇÕES 2026</span>
+            <h2>Minha cola eleitoral</h2>
+            <p>Meus candidatos e números para o dia da votação.</p>
+
+            <article className="resumo-cola-final cola-social">
+              <header className="cola-cabecalho">
+                <div>
+                  <span>ELEIÇÕES 2026</span>
+                  <h2>Minha Cola Eleitoral</h2>
+                </div>
+                <strong>{estado}</strong>
+              </header>
+
+              <div className="cola-candidatos">
+                {cargos.map((cargo) => {
+                  const candidato = selecionados[cargo.id];
+                  return (
+                    <div
+                      className={`cola-candidato ${
+                        candidato ? "" : "cola-candidato-vazio"
+                      }`}
+                      key={cargo.id}
+                    >
+                      <span className="cola-ordem">{cargo.ordem}</span>
+                      {candidato ? (
+                        <>
+                          <FotoNaCola candidato={candidato} />
+                          <span className="cola-dados">
+                            <small>{obterTituloCargo(cargo, estado)}</small>
+                            <strong>{candidato.nome}</strong>
+                            <em>{candidato.partido}</em>
+                          </span>
+                          <b>{candidato.numero}</b>
+                        </>
+                      ) : (
+                        <>
+                          <span className="cola-dados cola-dados-vazio">
+                            <small>{obterTituloCargo(cargo, estado)}</small>
+                            <span className="linha-preenchimento-manual" />
+                          </span>
+                          <span className="digitos-preenchimento-manual">
+                            {Array.from(
+                              { length: cargo.digitos },
+                              (_, indice) => (
+                                <i key={indice} />
+                              ),
+                            )}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+
+            <p className="arte-social-aviso">
+              Confira os números antes de votar.
+            </p>
+          </div>
+        </section>
+      )}
 
       <footer className="rodape">
         <p>
@@ -1444,10 +1470,11 @@ export default function Home() {
         .arte-social {
           position: fixed;
           top: 0;
-          left: -12000px;
-          z-index: -1;
+          left: 0;
+          z-index: 12000;
           width: 1080px;
           overflow: hidden;
+          pointer-events: none;
           background:
             radial-gradient(circle at 88% 8%, #f1ca30 0 58px, transparent 60px),
             radial-gradient(
@@ -1458,6 +1485,34 @@ export default function Home() {
             #f7f4ea;
           color: #1a3328;
           font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .fundo-geracao-imagem {
+          position: fixed;
+          inset: 0;
+          z-index: 13000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          background: rgba(10, 27, 21, 0.94);
+          color: #ffffff;
+          font-size: 1rem;
+        }
+
+        .indicador-geracao {
+          width: 24px;
+          height: 24px;
+          border: 3px solid rgba(255, 255, 255, 0.32);
+          border-top-color: #f1ca30;
+          border-radius: 50%;
+          animation: girar-indicador 0.8s linear infinite;
+        }
+
+        @keyframes girar-indicador {
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         .arte-social.formato-story {
