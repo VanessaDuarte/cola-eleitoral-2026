@@ -502,7 +502,17 @@ export default function Home() {
     window.localStorage.removeItem(obterChaveColaSalva(estado));
   }
 
+  function registrarUso(tipo: "imagem" | "impressao") {
+    void fetch("/api/contador", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ acao: "registrar", tipo }),
+      keepalive: true,
+    }).catch(() => undefined);
+  }
+
   function imprimirCola() {
+    registrarUso("impressao");
     window.print();
   }
 
@@ -571,6 +581,7 @@ export default function Home() {
     link.download = `minha-cola-eleitoral-${formatoImagem}-${estado}.png`;
     link.href = imagemGeradaUrl;
     link.click();
+    registrarUso("imagem");
   }
 
   function abrirCargo(cargoId: CargoId) {

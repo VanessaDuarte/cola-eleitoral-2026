@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "adm-zip": "^0.6.1",
     "csv-parse": "^7.0.2",
     "html-to-image": "^1.11.13",
