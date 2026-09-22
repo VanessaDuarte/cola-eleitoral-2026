@@ -1215,7 +1215,7 @@ export default function Home() {
                 {quantidadeCopias === 9
                   ? "9 colas · 6,3 × 8,5 cm cada"
                   : quantidadeCopias === 6
-                    ? "6 colas · 6,8 × 9,2 cm cada"
+                    ? "6 colas · 6,3 × 13,2 cm cada"
                     : "4 colas · 9 × 12,1 cm cada"}
               </p>
 
@@ -1396,7 +1396,10 @@ export default function Home() {
             unoptimized
           />
           <article className="cola-modelo-personalizado">
-            <span className="cola-modelo-estado">{estado}</span>
+            <span className="cola-modelo-estado">
+              <small>ESTADO</small>
+              <strong>{estado}</strong>
+            </span>
 
             <div className="cola-modelo-lista">
               {cargos.map((cargo) => {
@@ -2689,8 +2692,8 @@ export default function Home() {
         }
 
         .folha-a4-preview.copias-6 {
-          grid-template-columns: repeat(2, 32.38%);
-          grid-template-rows: repeat(3, 30.98%);
+          grid-template-columns: repeat(3, 30%);
+          grid-template-rows: repeat(2, 44%);
           gap: 1.2%;
         }
 
@@ -4159,26 +4162,52 @@ export default function Home() {
 
         .cola-modelo-estado {
           position: absolute;
-          top: 118px;
-          right: 78px;
-          display: grid;
-          width: 48px;
-          height: 48px;
-          place-items: center;
-          border: 2px solid rgba(255, 255, 255, 0.9);
-          border-radius: 50%;
-          background: #f5cd13;
-          color: #073d2c;
-          font-size: 18px;
+          top: 330px;
+          right: 184px;
+          display: flex;
+          width: 150px;
+          height: 76px;
+          box-sizing: border-box;
+          flex-direction: column;
+          justify-content: center;
+          padding: 8px 18px 7px 22px;
+          border: 1px solid rgba(255, 255, 255, 0.34);
+          border-left: 8px solid #f5cd13;
+          border-radius: 5px 16px 16px 5px;
+          background: linear-gradient(
+            110deg,
+            rgba(3, 59, 43, 0.96),
+            rgba(5, 91, 53, 0.9)
+          );
+          color: #ffffff;
+          box-shadow:
+            0 7px 14px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        }
+
+        .cola-modelo-estado small {
+          color: #f5cd13;
+          font-size: 12px;
           font-weight: 900;
-          box-shadow: 0 4px 9px rgba(0, 0, 0, 0.28);
+          line-height: 1;
+          letter-spacing: 2.5px;
+        }
+
+        .cola-modelo-estado strong {
+          margin-top: 3px;
+          color: #ffffff;
+          font-family: "Arial Narrow", Arial, sans-serif;
+          font-size: 34px;
+          font-weight: 900;
+          line-height: 0.9;
+          letter-spacing: 4px;
         }
 
         .cola-modelo-lista {
           position: absolute;
           top: 30px;
           bottom: 52px;
-          left: 68px;
+          left: 112px;
           display: grid;
           width: 660px;
           grid-template-rows: repeat(6, minmax(0, 1fr));
@@ -4242,7 +4271,7 @@ export default function Home() {
           display: block;
           overflow: hidden;
           max-width: 500px;
-          margin-top: -1px;
+          margin-top: 5px;
           color: #f4cb08;
           font-family: "Brush Script MT", "Segoe Script", cursive;
           font-size: 39px;
@@ -4312,19 +4341,14 @@ export default function Home() {
           letter-spacing: 1px;
         }
 
-        /* Novo padrão também no resumo e na pré-visualização A4. */
+        /* Versão clara e econômica para o resumo e para a impressão. */
         .resumo-formato-final .resumo-cola-final,
         .folha-a4-preview .cola-miniatura-estilizada {
           overflow: hidden;
-          border-color: #0b4e3a !important;
-          background: linear-gradient(
-            145deg,
-            #268f74 0%,
-            #08793f 42%,
-            #053b65 100%
-          ) !important;
-          color: #ffffff;
-          box-shadow: 0 8px 18px rgba(4, 47, 38, 0.18);
+          border-color: #174b36 !important;
+          background: #fffdf7 !important;
+          color: #15352b;
+          box-shadow: 0 6px 14px rgba(21, 53, 43, 0.12);
         }
 
         .resumo-formato-final .cola-cabecalho,
@@ -4361,7 +4385,7 @@ export default function Home() {
         .resumo-formato-final .cola-candidato,
         .folha-a4-preview .cola-miniatura-estilizada .cola-candidato {
           grid-template-columns: auto minmax(0, 1fr) auto !important;
-          border-color: rgba(255, 255, 255, 0.18) !important;
+          border-color: #dce3dc !important;
           background: transparent !important;
         }
 
@@ -4375,27 +4399,27 @@ export default function Home() {
         .folha-a4-preview .cola-miniatura-estilizada .foto-na-cola,
         .folha-a4-preview .cola-miniatura-estilizada .iniciais-cola {
           border-color: #ffffff !important;
-          outline: 1px solid #f3ca16;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.24);
+          outline: 1px solid #3e8a4b;
+          box-shadow: 0 2px 5px rgba(21, 53, 43, 0.18);
         }
 
         .resumo-formato-final .cola-dados small,
         .folha-a4-preview .cola-miniatura-estilizada .cola-dados small {
-          color: #ffffff !important;
+          color: #52685e !important;
           font-weight: 800 !important;
         }
 
         .resumo-formato-final .cola-dados strong,
         .folha-a4-preview .cola-miniatura-estilizada .cola-dados strong {
-          color: #f3ca16 !important;
-          font-family: "Brush Script MT", "Segoe Script", cursive;
-          font-weight: 700 !important;
-          text-shadow: 1px 1px 0 rgba(3, 54, 36, 0.7);
+          color: #15352b !important;
+          font-family: "Arial Narrow", Arial, sans-serif;
+          font-weight: 900 !important;
+          text-shadow: none;
         }
 
         .resumo-formato-final .cola-dados em,
         .folha-a4-preview .cola-miniatura-estilizada .cola-dados em {
-          color: rgba(255, 255, 255, 0.92) !important;
+          color: #3d7b46 !important;
         }
 
         .numero-em-caixas {
@@ -4412,6 +4436,7 @@ export default function Home() {
           height: 28px;
           place-items: center;
           border-radius: 5px;
+          border: 1px solid #1d6445;
           background: #ffffff;
           color: #07291f;
           font-family: Arial, sans-serif;
@@ -4431,6 +4456,7 @@ export default function Home() {
           height: 9px;
           border-radius: 1.5px;
           font-size: 5px;
+          border-width: 0.5px;
           box-shadow: none;
         }
 
@@ -4455,6 +4481,170 @@ export default function Home() {
           i {
           border-color: rgba(255, 255, 255, 0.9) !important;
           background: rgba(255, 255, 255, 0.94) !important;
+        }
+
+        /* Escalas finais da prévia: o conteúdo cresce junto com cada cartão. */
+        .folha-a4-preview .cola-miniatura-estilizada .cola-candidato {
+          align-items: center !important;
+        }
+
+        .folha-a4-preview
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio)
+          > .foto-na-cola,
+        .folha-a4-preview
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio)
+          > .iniciais-cola {
+          grid-column: 1 !important;
+        }
+
+        .folha-a4-preview
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio)
+          > .cola-dados {
+          grid-column: 2 !important;
+        }
+
+        .folha-a4-preview
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio)
+          > .numero-em-caixas {
+          grid-column: 3 !important;
+        }
+
+        .folha-a4-preview .cola-miniatura-estilizada .cola-dados {
+          min-width: 0 !important;
+        }
+
+        .folha-a4-preview .cola-miniatura-estilizada .cola-dados strong {
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          white-space: nowrap !important;
+        }
+
+        .folha-a4-preview.copias-9 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-9 .cola-miniatura-estilizada .iniciais-cola {
+          width: 9px !important;
+          min-width: 9px !important;
+          height: 9px !important;
+        }
+
+        .folha-a4-preview.copias-9
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio) {
+          grid-template-columns: 9px minmax(0, 1fr) auto !important;
+          column-gap: 3px !important;
+        }
+
+        .folha-a4-preview.copias-9
+          .cola-miniatura-estilizada
+          .cola-dados
+          small {
+          font-size: 0.15rem !important;
+        }
+
+        .folha-a4-preview.copias-9
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.25rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidatos {
+          padding: 2px 5px !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-candidato {
+          column-gap: 4px !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio) {
+          grid-template-columns: 12px minmax(0, 1fr) auto !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .iniciais-cola {
+          width: 12px !important;
+          min-width: 12px !important;
+          height: 12px !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-dados
+          small {
+          font-size: 0.18rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.31rem !important;
+        }
+
+        .folha-a4-preview.copias-6 .cola-miniatura-estilizada .cola-dados em {
+          font-size: 0.19rem !important;
+        }
+
+        .folha-a4-preview.copias-6
+          .cola-miniatura-estilizada
+          .numero-em-caixas
+          i {
+          width: 8px !important;
+          height: 10px !important;
+          font-size: 5.5px !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidatos {
+          padding: 2px 7px !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidato {
+          column-gap: 6px !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-candidato:not(.cola-candidato-vazio) {
+          grid-template-columns: 17px minmax(0, 1fr) auto !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .iniciais-cola {
+          width: 17px !important;
+          min-width: 17px !important;
+          height: 17px !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-dados
+          small {
+          font-size: 0.23rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .cola-dados
+          strong {
+          font-size: 0.4rem !important;
+        }
+
+        .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-dados em {
+          font-size: 0.24rem !important;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .numero-em-caixas
+          i {
+          width: 12px !important;
+          height: 15px !important;
+          font-size: 8px !important;
         }
 
         @media print {
@@ -4505,8 +4695,8 @@ export default function Home() {
           }
 
           .folha-impressao-real.copias-6 {
-            grid-template-columns: repeat(2, 68mm) !important;
-            grid-template-rows: repeat(3, 92mm) !important;
+            grid-template-columns: repeat(3, 63mm) !important;
+            grid-template-rows: repeat(2, 132mm) !important;
             gap: 2mm !important;
           }
 
@@ -4534,8 +4724,8 @@ export default function Home() {
           }
 
           .folha-impressao-real.copias-6 .cola-impressa-fidelidade {
-            width: 68mm !important;
-            height: 92mm !important;
+            width: 63mm !important;
+            height: 132mm !important;
           }
 
           .folha-impressao-real.copias-4 .cola-impressa-fidelidade {
@@ -4759,16 +4949,11 @@ export default function Home() {
             max-width: 40mm !important;
           }
 
-          /* Mantém na folha impressa a identidade exibida na prévia. */
+          /* Impressão clara: melhor leitura e menor consumo de tinta. */
           .folha-impressao-real .cola-impressa-fidelidade {
-            border-color: #0b4e3a !important;
-            background: linear-gradient(
-              145deg,
-              #268f74 0%,
-              #08793f 42%,
-              #053b65 100%
-            ) !important;
-            color: #ffffff !important;
+            border-color: #174b36 !important;
+            background: #fffdf7 !important;
+            color: #15352b !important;
             print-color-adjust: exact !important;
             -webkit-print-color-adjust: exact !important;
           }
@@ -4798,7 +4983,7 @@ export default function Home() {
 
           .folha-impressao-real .cola-candidato {
             grid-template-columns: auto minmax(0, 1fr) auto !important;
-            border-color: rgba(255, 255, 255, 0.25) !important;
+            border-color: #d7ded8 !important;
             background: transparent !important;
           }
 
@@ -4813,21 +4998,21 @@ export default function Home() {
           .folha-impressao-real .foto-na-cola,
           .folha-impressao-real .iniciais-cola {
             border-color: #ffffff !important;
-            outline: 0.35mm solid #f3ca16;
+            outline: 0.35mm solid #3e8a4b;
           }
 
           .folha-impressao-real .cola-dados small {
-            color: #ffffff !important;
+            color: #52685e !important;
           }
 
           .folha-impressao-real .cola-dados strong {
-            color: #f3ca16 !important;
+            color: #15352b !important;
             font-family: "Arial Narrow", Arial, sans-serif !important;
             font-weight: 900 !important;
           }
 
           .folha-impressao-real .cola-dados em {
-            color: #ffffff !important;
+            color: #3f7b46 !important;
           }
 
           .folha-impressao-real .numero-em-caixas {
@@ -4841,6 +5026,7 @@ export default function Home() {
             height: 4mm;
             place-items: center;
             border-radius: 0.7mm;
+            border: 0.25mm solid #1d6445;
             background: #ffffff !important;
             color: #07291f !important;
             font-family: Arial, sans-serif;
@@ -4864,8 +5050,141 @@ export default function Home() {
           }
 
           .folha-impressao-real .digitos-preenchimento-manual i {
-            border-color: #ffffff !important;
+            border-color: #1d6445 !important;
             background: #ffffff !important;
+          }
+
+          /* Distribuição e legibilidade proporcionais na folha impressa. */
+          .folha-impressao-real .cola-candidato {
+            align-items: center !important;
+          }
+
+          .folha-impressao-real
+            .cola-candidato:not(.cola-candidato-vazio)
+            > .foto-na-cola,
+          .folha-impressao-real
+            .cola-candidato:not(.cola-candidato-vazio)
+            > .iniciais-cola {
+            grid-column: 1 !important;
+          }
+
+          .folha-impressao-real
+            .cola-candidato:not(.cola-candidato-vazio)
+            > .cola-dados {
+            grid-column: 2 !important;
+          }
+
+          .folha-impressao-real
+            .cola-candidato:not(.cola-candidato-vazio)
+            > .numero-em-caixas {
+            grid-column: 3 !important;
+          }
+
+          .folha-impressao-real .cola-dados {
+            min-width: 0 !important;
+          }
+
+          .folha-impressao-real .cola-dados strong {
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+          }
+
+          .folha-impressao-real.copias-9 .foto-na-cola,
+          .folha-impressao-real.copias-9 .iniciais-cola {
+            width: 7mm !important;
+            min-width: 7mm !important;
+            height: 7mm !important;
+          }
+
+          .folha-impressao-real.copias-9
+            .cola-candidato:not(.cola-candidato-vazio) {
+            grid-template-columns: 7mm minmax(0, 1fr) auto !important;
+            column-gap: 1.3mm !important;
+          }
+
+          .folha-impressao-real.copias-9 .cola-dados small {
+            font-size: 4.3pt !important;
+          }
+
+          .folha-impressao-real.copias-9 .cola-dados strong {
+            font-size: 6.7pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-candidatos {
+            padding: 1mm 3mm !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-candidato {
+            column-gap: 1.8mm !important;
+          }
+
+          .folha-impressao-real.copias-6
+            .cola-candidato:not(.cola-candidato-vazio) {
+            grid-template-columns: 9mm minmax(0, 1fr) auto !important;
+          }
+
+          .folha-impressao-real.copias-6 .foto-na-cola,
+          .folha-impressao-real.copias-6 .iniciais-cola {
+            width: 9mm !important;
+            min-width: 9mm !important;
+            height: 9mm !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-dados small {
+            font-size: 5.2pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-dados strong {
+            font-size: 8.2pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .cola-dados em {
+            font-size: 5.2pt !important;
+          }
+
+          .folha-impressao-real.copias-6 .numero-em-caixas i {
+            width: 3.6mm !important;
+            height: 4.6mm !important;
+            font-size: 6.5pt !important;
+          }
+
+          .folha-impressao-real.copias-4 .cola-candidatos {
+            padding: 1mm 4.5mm !important;
+          }
+
+          .folha-impressao-real.copias-4 .cola-candidato {
+            column-gap: 2.5mm !important;
+          }
+
+          .folha-impressao-real.copias-4
+            .cola-candidato:not(.cola-candidato-vazio) {
+            grid-template-columns: 12mm minmax(0, 1fr) auto !important;
+          }
+
+          .folha-impressao-real.copias-4 .foto-na-cola,
+          .folha-impressao-real.copias-4 .iniciais-cola {
+            width: 12mm !important;
+            min-width: 12mm !important;
+            height: 12mm !important;
+          }
+
+          .folha-impressao-real.copias-4 .cola-dados small {
+            font-size: 6.2pt !important;
+          }
+
+          .folha-impressao-real.copias-4 .cola-dados strong {
+            font-size: 11pt !important;
+          }
+
+          .folha-impressao-real.copias-4 .cola-dados em {
+            font-size: 6.5pt !important;
+          }
+
+          .folha-impressao-real.copias-4 .numero-em-caixas i {
+            width: 5mm !important;
+            height: 6.2mm !important;
+            font-size: 9pt !important;
           }
 
           @page {
