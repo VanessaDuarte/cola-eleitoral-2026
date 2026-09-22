@@ -202,6 +202,16 @@ function FotoNaCola({ candidato }: { candidato?: Candidato }) {
   );
 }
 
+function NumeroEmCaixas({ numero }: { numero: string }) {
+  return (
+    <span className="numero-em-caixas" aria-label={`Número ${numero}`}>
+      {numero.split("").map((digito, indice) => (
+        <i key={`${digito}-${indice}`}>{digito}</i>
+      ))}
+    </span>
+  );
+}
+
 export default function Home() {
   const [estado, setEstado] = useState("MG");
   const [modalImpressaoAberto, setModalImpressaoAberto] = useState(false);
@@ -1027,7 +1037,7 @@ export default function Home() {
                           <em>{candidato.partido}</em>
                         </span>
 
-                        <b>{candidato.numero}</b>
+                        <NumeroEmCaixas numero={candidato.numero} />
                       </>
                     ) : (
                       <>
@@ -1138,7 +1148,7 @@ export default function Home() {
                                   <strong>{candidato.nome}</strong>
                                   <em>{candidato.partido}</em>
                                 </span>
-                                <b>{candidato.numero}</b>
+                                <NumeroEmCaixas numero={candidato.numero} />
                               </>
                             ) : (
                               <>
@@ -1215,17 +1225,6 @@ export default function Home() {
                 onClick={() => setModalImpressaoAberto(false)}
               >
                 Voltar e corrigir
-              </button>
-
-              <button
-                type="button"
-                className="botao-imagem"
-                disabled={gerandoImagem}
-                onClick={() => gerarPreviaImagem("story")}
-              >
-                {gerandoImagem && formatoImagem === "story"
-                  ? "Gerando..."
-                  : "Imagem Story"}
               </button>
 
               <button
@@ -1347,7 +1346,7 @@ export default function Home() {
                           <em>{candidato.partido}</em>
                         </span>
 
-                        <b>{candidato.numero}</b>
+                        <NumeroEmCaixas numero={candidato.numero} />
                       </>
                     ) : (
                       <>
@@ -1387,78 +1386,50 @@ export default function Home() {
           className={`arte-social formato-${formatoImagem}`}
           aria-hidden="true"
         >
-          <div className="arte-social-decoracao" />
           <Image
-            className="fundo-social"
-            src="/fundo-brasil.jpg"
+            className="fundo-modelo-cola"
+            src="/modelo-cola-social.png"
             alt=""
-            width={1080}
-            height={1920}
+            width={1600}
+            height={1950}
             priority
             unoptimized
           />
-          <div className="arte-social-conteudo">
-            <article className="resumo-cola-final cola-social">
-              <header className="cola-cabecalho">
-                <div className="cola-social-titulo">
-                  <span>ELEIÇÕES 2026</span>
-                  <h2>
-                    Minha cola
-                    <strong>eleitoral</strong>
-                  </h2>
-                  <p>Meus candidatos para o dia da votação</p>
-                </div>
-                <strong>{estado}</strong>
-              </header>
+          <article className="cola-modelo-personalizado">
+            <span className="cola-modelo-estado">{estado}</span>
 
-              <div className="cola-candidatos">
-                {cargos.map((cargo) => {
-                  const candidato = selecionados[cargo.id];
-                  return (
-                    <div
-                      className={`cola-candidato ${
-                        candidato ? "" : "cola-candidato-vazio"
-                      }`}
-                      key={cargo.id}
-                    >
-                      {candidato ? (
-                        <>
-                          <FotoNaCola candidato={candidato} />
-                          <span className="cola-ordem">{cargo.ordem}</span>
-                          <span className="cola-dados">
-                            <small>{obterTituloCargo(cargo, estado)}</small>
-                            <strong>{candidato.nome}</strong>
-                            <em>{candidato.partido}</em>
-                          </span>
-                          <b>{candidato.numero}</b>
-                        </>
-                      ) : (
-                        <>
-                          <span className="cola-ordem">{cargo.ordem}</span>
-                          <span className="cola-dados cola-dados-vazio">
-                            <small>{obterTituloCargo(cargo, estado)}</small>
-                            <span className="linha-preenchimento-manual" />
-                          </span>
-                          <span className="digitos-preenchimento-manual">
-                            {Array.from(
-                              { length: cargo.digitos },
-                              (_, indice) => (
-                                <i key={indice} />
-                              ),
-                            )}
-                          </span>
-                        </>
-                      )}
+            <div className="cola-modelo-lista">
+              {cargos.map((cargo) => {
+                const candidato = selecionados[cargo.id];
+                const digitos = candidato?.numero.padStart(cargo.digitos, " ");
+
+                return (
+                  <section
+                    className={`cola-modelo-linha ${
+                      candidato ? "" : "cola-modelo-linha-vazia"
+                    }`}
+                    key={cargo.id}
+                  >
+                    <div className="cola-modelo-foto">
+                      {candidato ? <FotoNaCola candidato={candidato} /> : null}
                     </div>
-                  );
-                })}
-              </div>
 
-              <p className="arte-social-aviso">
-                Confira os números antes de votar.
-              </p>
-            </article>
-          </div>
+                    <div className="cola-modelo-informacoes">
+                      <span>{obterTituloCargo(cargo, estado)}</span>
+                      <strong>{candidato?.nome || "________________"}</strong>
+                      <em>{candidato?.partido || ""}</em>
+
+                      <div className="cola-modelo-digitos">
+                        {Array.from({ length: cargo.digitos }, (_, indice) => (
+                          <i key={indice}>{digitos?.[indice] || ""}</i>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
+          </article>
         </section>
       )}
 
@@ -4033,6 +4004,459 @@ export default function Home() {
           letter-spacing: 2.5px;
         }
 
+        /* Aproxima a arte social do cartaz de referência. */
+        .arte-social .resumo-cola-final .cola-cabecalho {
+          min-height: 228px !important;
+          padding: 26px 36px 20px !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-cabecalho h2,
+        .formato-story .resumo-cola-final .cola-cabecalho h2 {
+          margin-top: 6px !important;
+          font-size: 82px !important;
+          line-height: 0.77 !important;
+          letter-spacing: -0.02em !important;
+          text-shadow: 3px 4px 0 #064524 !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-cabecalho h2 strong {
+          font-size: 1em !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-cabecalho > strong {
+          margin-top: 76px !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidatos {
+          gap: 4px !important;
+          padding: 0 !important;
+          border-right: 4px solid #07512d !important;
+          border-left: 4px solid #07512d !important;
+          background: #07512d !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato,
+        .formato-story .resumo-cola-final .cola-candidato {
+          grid-template-columns: 174px 58px minmax(0, 1fr) auto !important;
+          gap: 18px !important;
+          min-height: 0 !important;
+          padding: 0 28px 0 0 !important;
+          border: 0 !important;
+          border-radius: 2px !important;
+          background:
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.1),
+              transparent 42%,
+              rgba(108, 76, 0, 0.07)
+            ),
+            linear-gradient(100deg, #f6d835 0%, #f4cf25 100%) !important;
+          background-size: auto !important;
+          box-shadow: inset 0 -2px 0 rgba(4, 73, 39, 0.26) !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato:nth-child(even) {
+          background:
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.12),
+              transparent 44%,
+              rgba(5, 70, 36, 0.05)
+            ),
+            linear-gradient(100deg, #8ccc64 0%, #a6d977 100%) !important;
+        }
+
+        .arte-social .resumo-cola-final .foto-na-cola,
+        .arte-social .resumo-cola-final .iniciais-cola,
+        .formato-story .resumo-cola-final .foto-na-cola,
+        .formato-story .resumo-cola-final .iniciais-cola {
+          align-self: stretch !important;
+          width: 174px !important;
+          min-width: 174px !important;
+          height: 100% !important;
+          min-height: 148px !important;
+          border: 0 !important;
+          border-right: 3px solid #07512d !important;
+          outline: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          object-fit: cover;
+          object-position: center top;
+        }
+
+        .arte-social .resumo-cola-final .cola-ordem,
+        .formato-story .resumo-cola-final .cola-ordem {
+          width: 54px !important;
+          height: 54px !important;
+          border: 2px solid #f4d42a !important;
+          background: #07512d !important;
+          color: #f8dc31 !important;
+          font-family: "Arial Narrow", Arial, sans-serif;
+          font-size: 22px !important;
+          font-weight: 900;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16) !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-dados small,
+        .formato-story .resumo-cola-final .cola-dados small {
+          font-family: "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+          font-size: 21px !important;
+          font-weight: 900 !important;
+          line-height: 1 !important;
+          letter-spacing: 0.3px;
+        }
+
+        .arte-social .resumo-cola-final .cola-dados strong,
+        .formato-story .resumo-cola-final .cola-dados strong {
+          display: block;
+          overflow: hidden;
+          font-family:
+            "Arial Narrow", "Roboto Condensed", "Arial Black", Arial, sans-serif;
+          font-size: 39px !important;
+          font-stretch: condensed;
+          font-weight: 900 !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.35px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato > b,
+        .formato-story .resumo-cola-final .cola-candidato > b {
+          min-width: 210px;
+          font-size: 72px !important;
+          line-height: 0.9;
+          letter-spacing: 2px !important;
+          text-align: right;
+          text-shadow:
+            1px 1px 0 rgba(255, 255, 255, 0.18),
+            1px 2px 0 rgba(7, 55, 34, 0.08) !important;
+        }
+
+        /* Modelo autoral fornecido para a publicação do Instagram. */
+        .arte-social.formato-publicacao {
+          width: 1080px;
+          height: 1350px;
+          background: #00883c;
+        }
+
+        .fundo-modelo-cola {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover;
+          object-position: center;
+        }
+
+        .cola-modelo-personalizado {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          font-family: "Arial Narrow", Arial, sans-serif;
+        }
+
+        .cola-modelo-estado {
+          position: absolute;
+          top: 118px;
+          right: 78px;
+          display: grid;
+          width: 48px;
+          height: 48px;
+          place-items: center;
+          border: 2px solid rgba(255, 255, 255, 0.9);
+          border-radius: 50%;
+          background: #f5cd13;
+          color: #073d2c;
+          font-size: 18px;
+          font-weight: 900;
+          box-shadow: 0 4px 9px rgba(0, 0, 0, 0.28);
+        }
+
+        .cola-modelo-lista {
+          position: absolute;
+          top: 30px;
+          bottom: 52px;
+          left: 68px;
+          display: grid;
+          width: 660px;
+          grid-template-rows: repeat(6, minmax(0, 1fr));
+          gap: 5px;
+        }
+
+        .cola-modelo-linha {
+          display: grid;
+          min-width: 0;
+          grid-template-columns: 132px minmax(0, 1fr);
+          align-items: center;
+          gap: 18px;
+        }
+
+        .cola-modelo-foto {
+          display: grid;
+          width: 122px;
+          height: 122px;
+          place-items: center;
+          overflow: hidden;
+          border: 4px solid rgba(255, 255, 255, 0.96);
+          border-radius: 50%;
+          background: linear-gradient(145deg, #ffb78e, #e08e65);
+          box-shadow:
+            0 7px 14px rgba(0, 0, 0, 0.28),
+            0 0 0 3px rgba(246, 205, 19, 0.7);
+        }
+
+        .cola-modelo-foto .foto-na-cola,
+        .cola-modelo-foto .iniciais-cola {
+          width: 100% !important;
+          height: 100% !important;
+          min-width: 0 !important;
+          min-height: 0 !important;
+          border: 0 !important;
+          border-radius: 50% !important;
+          outline: 0 !important;
+          object-fit: cover;
+          object-position: center top;
+        }
+
+        .cola-modelo-informacoes {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .cola-modelo-informacoes > span {
+          overflow: hidden;
+          color: #ffffff;
+          font-size: 27px;
+          font-weight: 700;
+          line-height: 1;
+          text-shadow: 0 2px 3px rgba(0, 0, 0, 0.34);
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .cola-modelo-informacoes > strong {
+          display: block;
+          overflow: hidden;
+          max-width: 500px;
+          margin-top: -1px;
+          color: #f4cb08;
+          font-family: "Brush Script MT", "Segoe Script", cursive;
+          font-size: 39px;
+          font-weight: 700;
+          line-height: 1.03;
+          text-shadow:
+            1px 2px 0 rgba(6, 68, 43, 0.72),
+            0 3px 5px rgba(0, 0, 0, 0.28);
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .cola-modelo-informacoes > em {
+          min-height: 15px;
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 800;
+          line-height: 1;
+          letter-spacing: 0.8px;
+          text-transform: uppercase;
+        }
+
+        .cola-modelo-digitos {
+          display: flex;
+          margin-top: 6px;
+          gap: 8px;
+        }
+
+        .cola-modelo-digitos i {
+          display: grid;
+          width: 56px;
+          height: 58px;
+          place-items: center;
+          border: 2px solid rgba(255, 255, 255, 0.94);
+          border-radius: 11px;
+          background: rgba(255, 255, 255, 0.97);
+          color: #071a17;
+          font-family: Arial, sans-serif;
+          font-size: 38px;
+          font-style: normal;
+          font-weight: 900;
+          line-height: 1;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cola-modelo-linha-vazia .cola-modelo-foto {
+          background:
+            radial-gradient(
+              circle at 50% 39%,
+              #f3d0b6 0 21px,
+              transparent 22px
+            ),
+            radial-gradient(
+              ellipse at 50% 92%,
+              #52833e 0 46px,
+              transparent 47px
+            ),
+            #efaa82;
+          opacity: 0.72;
+        }
+
+        .cola-modelo-linha-vazia .cola-modelo-informacoes > strong {
+          color: rgba(244, 203, 8, 0.62);
+          font-family: Arial, sans-serif;
+          font-size: 25px;
+          letter-spacing: 1px;
+        }
+
+        /* Novo padrão também no resumo e na pré-visualização A4. */
+        .resumo-formato-final .resumo-cola-final,
+        .folha-a4-preview .cola-miniatura-estilizada {
+          overflow: hidden;
+          border-color: #0b4e3a !important;
+          background: linear-gradient(
+            145deg,
+            #268f74 0%,
+            #08793f 42%,
+            #053b65 100%
+          ) !important;
+          color: #ffffff;
+          box-shadow: 0 8px 18px rgba(4, 47, 38, 0.18);
+        }
+
+        .resumo-formato-final .cola-cabecalho,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-cabecalho {
+          border-bottom: 2px solid #f3ca16 !important;
+          background: linear-gradient(100deg, #075234, #087a3d) !important;
+        }
+
+        .resumo-formato-final .cola-cabecalho span,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-cabecalho span {
+          color: #f3cd18 !important;
+        }
+
+        .resumo-formato-final .cola-cabecalho h2,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-cabecalho h2 {
+          color: #ffffff !important;
+          font-family: "Arial Narrow", Arial, sans-serif;
+          font-weight: 900 !important;
+          letter-spacing: -0.02em;
+        }
+
+        .resumo-formato-final .cola-cabecalho > strong,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-cabecalho > strong {
+          border-color: rgba(255, 255, 255, 0.9) !important;
+          background: #f3ca16 !important;
+          color: #083c2c !important;
+        }
+
+        .resumo-formato-final .cola-candidatos,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-candidatos {
+          background: transparent !important;
+        }
+
+        .resumo-formato-final .cola-candidato,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-candidato {
+          grid-template-columns: auto minmax(0, 1fr) auto !important;
+          border-color: rgba(255, 255, 255, 0.18) !important;
+          background: transparent !important;
+        }
+
+        .resumo-formato-final .cola-ordem,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-ordem {
+          display: none !important;
+        }
+
+        .resumo-formato-final .foto-na-cola,
+        .resumo-formato-final .iniciais-cola,
+        .folha-a4-preview .cola-miniatura-estilizada .foto-na-cola,
+        .folha-a4-preview .cola-miniatura-estilizada .iniciais-cola {
+          border-color: #ffffff !important;
+          outline: 1px solid #f3ca16;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.24);
+        }
+
+        .resumo-formato-final .cola-dados small,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-dados small {
+          color: #ffffff !important;
+          font-weight: 800 !important;
+        }
+
+        .resumo-formato-final .cola-dados strong,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-dados strong {
+          color: #f3ca16 !important;
+          font-family: "Brush Script MT", "Segoe Script", cursive;
+          font-weight: 700 !important;
+          text-shadow: 1px 1px 0 rgba(3, 54, 36, 0.7);
+        }
+
+        .resumo-formato-final .cola-dados em,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-dados em {
+          color: rgba(255, 255, 255, 0.92) !important;
+        }
+
+        .numero-em-caixas {
+          display: flex;
+          flex: 0 0 auto;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 3px;
+        }
+
+        .numero-em-caixas i {
+          display: grid;
+          width: 24px;
+          height: 28px;
+          place-items: center;
+          border-radius: 5px;
+          background: #ffffff;
+          color: #07291f;
+          font-family: Arial, sans-serif;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 900;
+          line-height: 1;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .folha-a4-preview .cola-miniatura-estilizada .numero-em-caixas {
+          gap: 1px;
+        }
+
+        .folha-a4-preview .cola-miniatura-estilizada .numero-em-caixas i {
+          width: 7px;
+          height: 9px;
+          border-radius: 1.5px;
+          font-size: 5px;
+          box-shadow: none;
+        }
+
+        .folha-a4-preview.copias-4
+          .cola-miniatura-estilizada
+          .numero-em-caixas
+          i {
+          width: 11px;
+          height: 13px;
+          font-size: 7px;
+        }
+
+        .resumo-formato-final .cola-candidato-vazio,
+        .folha-a4-preview .cola-miniatura-estilizada .cola-candidato-vazio {
+          grid-template-columns: minmax(0, 1fr) auto !important;
+        }
+
+        .resumo-formato-final .digitos-preenchimento-manual i,
+        .folha-a4-preview
+          .cola-miniatura-estilizada
+          .digitos-preenchimento-manual
+          i {
+          border-color: rgba(255, 255, 255, 0.9) !important;
+          background: rgba(255, 255, 255, 0.94) !important;
+        }
+
         @media print {
           html,
           body {
@@ -4333,6 +4757,115 @@ export default function Home() {
 
           .folha-impressao-real .cola-rodape strong {
             max-width: 40mm !important;
+          }
+
+          /* Mantém na folha impressa a identidade exibida na prévia. */
+          .folha-impressao-real .cola-impressa-fidelidade {
+            border-color: #0b4e3a !important;
+            background: linear-gradient(
+              145deg,
+              #268f74 0%,
+              #08793f 42%,
+              #053b65 100%
+            ) !important;
+            color: #ffffff !important;
+            print-color-adjust: exact !important;
+            -webkit-print-color-adjust: exact !important;
+          }
+
+          .folha-impressao-real .cola-cabecalho {
+            border-bottom: 0.5mm solid #f3ca16 !important;
+            background: linear-gradient(100deg, #075234, #087a3d) !important;
+          }
+
+          .folha-impressao-real .cola-cabecalho span {
+            color: #f3ca16 !important;
+          }
+
+          .folha-impressao-real .cola-cabecalho h2 {
+            color: #ffffff !important;
+          }
+
+          .folha-impressao-real .cola-cabecalho > strong {
+            border-color: #ffffff !important;
+            background: #f3ca16 !important;
+            color: #083c2c !important;
+          }
+
+          .folha-impressao-real .cola-candidatos {
+            background: transparent !important;
+          }
+
+          .folha-impressao-real .cola-candidato {
+            grid-template-columns: auto minmax(0, 1fr) auto !important;
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            background: transparent !important;
+          }
+
+          .folha-impressao-real .cola-candidato-vazio {
+            grid-template-columns: minmax(0, 1fr) auto !important;
+          }
+
+          .folha-impressao-real .cola-ordem {
+            display: none !important;
+          }
+
+          .folha-impressao-real .foto-na-cola,
+          .folha-impressao-real .iniciais-cola {
+            border-color: #ffffff !important;
+            outline: 0.35mm solid #f3ca16;
+          }
+
+          .folha-impressao-real .cola-dados small {
+            color: #ffffff !important;
+          }
+
+          .folha-impressao-real .cola-dados strong {
+            color: #f3ca16 !important;
+            font-family: "Arial Narrow", Arial, sans-serif !important;
+            font-weight: 900 !important;
+          }
+
+          .folha-impressao-real .cola-dados em {
+            color: #ffffff !important;
+          }
+
+          .folha-impressao-real .numero-em-caixas {
+            display: flex !important;
+            gap: 0.45mm;
+          }
+
+          .folha-impressao-real .numero-em-caixas i {
+            display: grid;
+            width: 3.2mm;
+            height: 4mm;
+            place-items: center;
+            border-radius: 0.7mm;
+            background: #ffffff !important;
+            color: #07291f !important;
+            font-family: Arial, sans-serif;
+            font-size: 6pt;
+            font-style: normal;
+            font-weight: 900;
+            line-height: 1;
+          }
+
+          .folha-impressao-real.copias-9 .numero-em-caixas i {
+            width: 2.7mm;
+            height: 3.3mm;
+            font-size: 5pt;
+          }
+
+          .folha-impressao-real.copias-4 .numero-em-caixas i {
+            width: 4.7mm;
+            height: 5.7mm;
+            border-radius: 1mm;
+            font-size: 8.5pt;
+          }
+
+          .folha-impressao-real .digitos-preenchimento-manual i {
+            border-color: #ffffff !important;
+            background: #ffffff !important;
           }
 
           @page {
