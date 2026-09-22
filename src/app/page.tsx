@@ -177,12 +177,14 @@ function FotoNaCola({ candidato }: { candidato?: Candidato }) {
   if (candidato?.foto) {
     return (
       <Image
+        key={`${candidato.id}-${candidato.foto}`}
         className="foto-na-cola"
         src={candidato.foto}
         alt=""
         width={44}
         height={44}
         loading="eager"
+        unoptimized
       />
     );
   }
@@ -1387,15 +1389,11 @@ export default function Home() {
         >
           <div className="arte-social-decoracao" />
           <div className="arte-social-conteudo">
-            <span className="arte-social-selo">ELEIÇÕES 2026</span>
-            <h2>Minha cola eleitoral</h2>
-            <p>Meus candidatos e números para o dia da votação.</p>
-
             <article className="resumo-cola-final cola-social">
               <header className="cola-cabecalho">
-                <div>
+                <div className="cola-social-titulo">
                   <span>ELEIÇÕES 2026</span>
-                  <h2>Minha Cola Eleitoral</h2>
+                  <h2>Minha cola eleitoral</h2>
                 </div>
                 <strong>{estado}</strong>
               </header>
@@ -1441,11 +1439,11 @@ export default function Home() {
                   );
                 })}
               </div>
-            </article>
 
-            <p className="arte-social-aviso">
-              Confira os números antes de votar.
-            </p>
+              <p className="arte-social-aviso">
+                Confira os números antes de votar.
+              </p>
+            </article>
           </div>
         </section>
       )}
@@ -1476,13 +1474,41 @@ export default function Home() {
           overflow: hidden;
           pointer-events: none;
           background:
-            radial-gradient(circle at 88% 8%, #f1ca30 0 58px, transparent 60px),
-            radial-gradient(
-              circle at 96% 16%,
-              #518e45 0 88px,
-              transparent 90px
+            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.035) 1px,
+              transparent 1px
             ),
-            #f7f4ea;
+            radial-gradient(
+              circle at 50% -10%,
+              rgba(241, 202, 48, 0.3),
+              transparent 38%
+            ),
+            radial-gradient(
+              circle at 2% 1%,
+              #f1ca30 0 105px,
+              transparent 108px
+            ),
+            radial-gradient(
+              circle at 102% 8%,
+              #518e45 0 130px,
+              transparent 133px
+            ),
+            radial-gradient(
+              circle at 100% 100%,
+              #f1ca30 0 82px,
+              transparent 85px
+            ),
+            linear-gradient(145deg, #244f3d 0%, #122d24 52%, #0b2019 100%);
+          background-size:
+            54px 54px,
+            54px 54px,
+            auto,
+            auto,
+            auto,
+            auto,
+            auto;
           color: #1a3328;
           font-family: Arial, Helvetica, sans-serif;
         }
@@ -1524,12 +1550,17 @@ export default function Home() {
 
         .arte-social-decoracao {
           position: absolute;
-          right: -170px;
-          bottom: -190px;
-          width: 520px;
-          height: 520px;
+          right: auto;
+          left: -130px;
+          bottom: -150px;
+          width: 340px;
+          height: 340px;
           border-radius: 50%;
-          background: #1a3328;
+          background: linear-gradient(145deg, #64a654, #2d6e43 55%, #14382b);
+          box-shadow:
+            24px -24px 80px rgba(84, 164, 76, 0.28),
+            inset -22px -22px 40px rgba(9, 39, 29, 0.35),
+            inset 14px 14px 32px rgba(255, 255, 255, 0.16);
         }
 
         .arte-social-conteudo {
@@ -1543,100 +1574,158 @@ export default function Home() {
         }
 
         .formato-story .arte-social-conteudo {
-          padding: 190px 80px 110px;
+          padding: 24px;
         }
         .formato-publicacao .arte-social-conteudo {
-          padding: 70px 80px 55px;
-        }
-
-        .arte-social-selo {
-          padding: 10px 18px;
-          border-radius: 999px;
-          background: #f1ca30;
-          font-size: 19px;
-          font-weight: 900;
-          letter-spacing: 0.12em;
+          padding: 24px;
         }
 
         .arte-social-conteudo > h2 {
-          margin: 18px 0 5px;
-          font-size: 54px;
-          line-height: 1;
-          letter-spacing: -0.04em;
+          display: none;
         }
 
-        .arte-social-conteudo > p:not(.arte-social-aviso) {
-          margin: 0 0 30px;
-          color: #65716b;
-          font-size: 22px;
+        .arte-social-conteudo > h2 strong {
+          display: block;
+          font-size: 1.14em;
+          font-weight: 900;
         }
 
         .cola-social {
-          width: 700px !important;
-          height: 918px !important;
+          display: grid !important;
+          width: 100% !important;
+          height: 100% !important;
           aspect-ratio: auto !important;
-          border-width: 4px !important;
-          border-radius: 28px !important;
-          box-shadow: 0 30px 80px rgba(26, 51, 40, 0.2) !important;
+          grid-template-rows: auto minmax(0, 1fr) auto;
+          border: 2px solid rgba(255, 255, 255, 0.7) !important;
+          border-radius: 34px !important;
+          background: linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #f5f7f2 100%
+          ) !important;
+          box-shadow:
+            0 42px 90px rgba(0, 0, 0, 0.42),
+            0 12px 26px rgba(0, 0, 0, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+          overflow: hidden;
         }
 
         .formato-story .cola-social {
-          width: 760px !important;
-          height: 1025px !important;
+          width: 100% !important;
+          height: 100% !important;
         }
 
         .cola-social .cola-cabecalho {
-          gap: 24px !important;
-          padding: 25px 34px !important;
+          align-items: center !important;
+          gap: 22px !important;
+          padding: 28px 38px !important;
+          border-bottom: 1px solid rgba(241, 202, 48, 0.38);
+          background:
+            radial-gradient(
+              circle at 88% 15%,
+              rgba(241, 202, 48, 0.2),
+              transparent 24%
+            ),
+            linear-gradient(135deg, #214a39 0%, #15382c 48%, #0c271e 100%) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.16),
+            inset 0 -16px 30px rgba(0, 0, 0, 0.14),
+            0 10px 24px rgba(14, 47, 36, 0.18);
         }
-        .cola-social .cola-cabecalho span {
-          font-size: 14px !important;
+        .cola-social-titulo {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+          gap: 8px;
         }
-        .cola-social .cola-cabecalho h2 {
-          font-size: 32px !important;
-          white-space: nowrap !important;
+        .cola-social .cola-cabecalho .cola-social-titulo span {
+          margin: 0 !important;
+          font-size: 22px !important;
+          letter-spacing: 0.18em !important;
+        }
+        .cola-social-titulo h2 {
+          margin: 0;
+          color: #ffffff;
+          font-size: 52px;
+          line-height: 1;
+          letter-spacing: -0.035em;
         }
         .cola-social .cola-cabecalho > strong {
           width: 58px !important;
           min-width: 58px !important;
           height: 58px !important;
           font-size: 18px !important;
+          border: 2px solid rgba(255, 255, 255, 0.48);
+          background: linear-gradient(145deg, #ffdb42, #e7aa08) !important;
+          box-shadow:
+            0 9px 18px rgba(0, 0, 0, 0.3),
+            inset 4px 4px 9px rgba(255, 255, 255, 0.42),
+            inset -4px -4px 9px rgba(157, 104, 0, 0.24);
         }
 
         .cola-social .cola-candidatos {
           min-height: 0 !important;
-          padding: 10px 34px !important;
+          gap: 12px;
+          padding: 20px 28px !important;
+          background:
+            radial-gradient(
+              circle at 100% 0,
+              rgba(79, 145, 69, 0.1),
+              transparent 32%
+            ),
+            linear-gradient(180deg, #f4f6f1, #edf1ea) !important;
         }
         .cola-social .cola-candidato {
-          grid-template-columns: 38px 64px minmax(0, 1fr) auto !important;
-          gap: 15px !important;
+          grid-template-columns: 42px 76px minmax(0, 1fr) auto !important;
+          gap: 18px !important;
+          box-sizing: border-box;
+          padding: 12px 18px !important;
+          border: 1px solid rgba(21, 56, 44, 0.1) !important;
+          border-radius: 18px;
+          background: linear-gradient(145deg, #ffffff 0%, #f7f8f5 100%);
+          box-shadow:
+            0 8px 18px rgba(17, 54, 42, 0.1),
+            inset 1px 1px 0 rgba(255, 255, 255, 0.95),
+            inset -1px -1px 0 rgba(21, 56, 44, 0.04);
         }
         .cola-social .cola-candidato-vazio {
           grid-template-columns: 38px minmax(0, 1fr) auto !important;
         }
         .cola-social .cola-ordem {
-          width: 36px !important;
-          height: 36px !important;
-          font-size: 16px !important;
+          width: 40px !important;
+          height: 40px !important;
+          font-size: 18px !important;
+          border: 1px solid rgba(255, 255, 255, 0.55);
+          background: linear-gradient(145deg, #64a854, #347d43) !important;
+          box-shadow:
+            0 6px 12px rgba(35, 104, 55, 0.28),
+            inset 3px 3px 6px rgba(255, 255, 255, 0.2),
+            inset -3px -3px 6px rgba(17, 66, 37, 0.24);
         }
         .cola-social .foto-na-cola,
         .cola-social .iniciais-cola {
-          width: 62px !important;
-          min-width: 62px !important;
-          height: 62px !important;
-          font-size: 16px !important;
+          width: 74px !important;
+          min-width: 74px !important;
+          height: 74px !important;
+          font-size: 18px !important;
+          border-width: 3px !important;
+          box-shadow:
+            0 8px 16px rgba(19, 64, 47, 0.2),
+            0 0 0 4px rgba(255, 255, 255, 0.9);
         }
         .cola-social .cola-dados small {
-          font-size: 12px !important;
+          font-size: 15px !important;
         }
         .cola-social .cola-dados strong {
-          font-size: 23px !important;
+          font-size: 31px !important;
         }
         .cola-social .cola-dados em {
-          font-size: 13px !important;
+          font-size: 16px !important;
         }
         .cola-social .cola-candidato > b {
-          font-size: 35px !important;
+          font-size: 50px !important;
+          letter-spacing: -0.04em;
+          text-shadow: 0 2px 0 #ffffff;
         }
         .cola-social .linha-preenchimento-manual {
           height: 32px !important;
@@ -1647,9 +1736,127 @@ export default function Home() {
         }
 
         .arte-social-aviso {
-          margin: 28px 0 0;
-          font-size: 20px;
+          position: relative;
+          box-sizing: border-box;
+          width: 100%;
+          margin: 0;
+          padding: 22px 72px 24px;
+          border-top: 1px solid #dedbce;
+          background: linear-gradient(180deg, #f8f6ec, #e9eadf);
+          box-shadow: inset 0 10px 20px rgba(21, 56, 44, 0.05);
+          text-align: center;
+          font-size: 21px;
           font-weight: 800;
+        }
+
+        .arte-social-aviso::before,
+        .arte-social-aviso::after {
+          position: absolute;
+          top: 50%;
+          width: 52px;
+          height: 1px;
+          background: #cfcab9;
+          content: "";
+        }
+
+        .arte-social-aviso::before {
+          left: 0;
+        }
+
+        .arte-social-aviso::after {
+          right: 0;
+        }
+
+        .formato-publicacao .arte-social-conteudo > h2 {
+          display: none;
+        }
+
+        .formato-publicacao .cola-social .cola-cabecalho span {
+          font-size: 19px !important;
+        }
+
+        /* O Story recebe escala própria para reproduzir fielmente o mockup. */
+        .formato-story .arte-social-conteudo {
+          padding: 24px;
+        }
+
+        .formato-story .arte-social-conteudo > h2 {
+          margin: 0 0 28px 54px;
+          font-size: 110px;
+          line-height: 0.86;
+        }
+
+        .formato-story .cola-social {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        .formato-story .cola-social .cola-cabecalho {
+          padding: 38px 44px !important;
+        }
+
+        .formato-story .cola-social .cola-cabecalho .cola-social-titulo span {
+          font-size: 25px !important;
+        }
+
+        .formato-story .cola-social-titulo h2 {
+          font-size: 66px;
+        }
+
+        .formato-story .cola-social .cola-cabecalho > strong {
+          width: 66px !important;
+          min-width: 66px !important;
+          height: 66px !important;
+          font-size: 21px !important;
+        }
+
+        .formato-story .cola-social .cola-candidatos {
+          padding: 12px 44px !important;
+        }
+
+        .formato-story .cola-social .cola-candidato {
+          grid-template-columns: 52px 112px minmax(0, 1fr) auto !important;
+          gap: 24px !important;
+        }
+
+        .formato-story .cola-social .cola-candidato-vazio {
+          grid-template-columns: 48px minmax(0, 1fr) auto !important;
+        }
+
+        .formato-story .cola-social .cola-ordem {
+          width: 46px !important;
+          height: 46px !important;
+          font-size: 21px !important;
+        }
+
+        .formato-story .cola-social .foto-na-cola,
+        .formato-story .cola-social .iniciais-cola {
+          width: 110px !important;
+          min-width: 110px !important;
+          height: 110px !important;
+          font-size: 21px !important;
+        }
+
+        .formato-story .cola-social .cola-dados small {
+          font-size: 20px !important;
+        }
+
+        .formato-story .cola-social .cola-dados strong {
+          font-size: 44px !important;
+          line-height: 1.02 !important;
+        }
+
+        .formato-story .cola-social .cola-dados em {
+          font-size: 21px !important;
+        }
+
+        .formato-story .cola-social .cola-candidato > b {
+          font-size: 68px !important;
+        }
+
+        .formato-story .arte-social-aviso {
+          padding: 26px 72px 30px;
+          font-size: 24px;
         }
 
         .fundo-modal-imagem {
