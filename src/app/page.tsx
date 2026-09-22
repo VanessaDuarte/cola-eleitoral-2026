@@ -1388,12 +1388,25 @@ export default function Home() {
           aria-hidden="true"
         >
           <div className="arte-social-decoracao" />
+          <Image
+            className="fundo-social"
+            src="/fundo-brasil.jpg"
+            alt=""
+            width={1080}
+            height={1920}
+            priority
+            unoptimized
+          />
           <div className="arte-social-conteudo">
             <article className="resumo-cola-final cola-social">
               <header className="cola-cabecalho">
                 <div className="cola-social-titulo">
                   <span>ELEIÇÕES 2026</span>
-                  <h2>Minha cola eleitoral</h2>
+                  <h2>
+                    Minha cola
+                    <strong>eleitoral</strong>
+                  </h2>
+                  <p>Meus candidatos para o dia da votação</p>
                 </div>
                 <strong>{estado}</strong>
               </header>
@@ -1408,10 +1421,10 @@ export default function Home() {
                       }`}
                       key={cargo.id}
                     >
-                      <span className="cola-ordem">{cargo.ordem}</span>
                       {candidato ? (
                         <>
                           <FotoNaCola candidato={candidato} />
+                          <span className="cola-ordem">{cargo.ordem}</span>
                           <span className="cola-dados">
                             <small>{obterTituloCargo(cargo, estado)}</small>
                             <strong>{candidato.nome}</strong>
@@ -1421,6 +1434,7 @@ export default function Home() {
                         </>
                       ) : (
                         <>
+                          <span className="cola-ordem">{cargo.ordem}</span>
                           <span className="cola-dados cola-dados-vazio">
                             <small>{obterTituloCargo(cargo, estado)}</small>
                             <span className="linha-preenchimento-manual" />
@@ -1857,6 +1871,587 @@ export default function Home() {
         .formato-story .arte-social-aviso {
           padding: 26px 72px 30px;
           font-size: 24px;
+        }
+
+        /* Postagem inspirada em cartazes eleitorais brasileiros. */
+        .arte-social {
+          isolation: isolate;
+          background:
+            linear-gradient(
+              115deg,
+              rgba(255, 255, 255, 0.035) 0 2px,
+              transparent 2px 20px
+            ),
+            radial-gradient(
+              circle at 18% 4%,
+              rgba(255, 214, 42, 0.32),
+              transparent 28%
+            ),
+            linear-gradient(155deg, #0b6a36 0%, #064827 48%, #032f20 100%);
+        }
+
+        .bandeira-social {
+          position: absolute;
+          z-index: 0;
+          top: -150px;
+          right: -270px;
+          width: 980px;
+          height: auto;
+          opacity: 0.58;
+          filter: saturate(1.08) drop-shadow(0 34px 34px rgba(0, 0, 0, 0.32));
+          transform: rotate(5deg);
+        }
+
+        .arte-social-decoracao {
+          z-index: 0;
+          right: -190px;
+          bottom: -185px;
+          left: auto;
+          width: 500px;
+          height: 500px;
+          border: 70px solid rgba(255, 210, 29, 0.9);
+          background: #173f86;
+          box-shadow:
+            0 0 0 24px rgba(255, 255, 255, 0.08),
+            0 0 90px rgba(255, 209, 25, 0.24),
+            inset 18px 18px 40px rgba(255, 255, 255, 0.12);
+          opacity: 0.72;
+        }
+
+        .arte-social-conteudo,
+        .formato-story .arte-social-conteudo,
+        .formato-publicacao .arte-social-conteudo {
+          padding: 26px;
+        }
+
+        .cola-social,
+        .formato-story .cola-social {
+          width: 100% !important;
+          height: 100% !important;
+          grid-template-rows: auto minmax(0, 1fr) auto;
+          border: 0 !important;
+          border-radius: 36px !important;
+          background: transparent !important;
+          box-shadow: 0 34px 80px rgba(0, 0, 0, 0.28) !important;
+          overflow: hidden;
+        }
+
+        .cola-social .cola-cabecalho,
+        .formato-story .cola-social .cola-cabecalho {
+          position: relative;
+          z-index: 1;
+          min-height: 240px;
+          box-sizing: border-box;
+          align-items: flex-start !important;
+          padding: 38px 42px 32px !important;
+          border: 2px solid rgba(255, 255, 255, 0.28);
+          border-bottom: 8px solid #f6cf20;
+          border-radius: 34px 34px 0 0;
+          background:
+            linear-gradient(
+              90deg,
+              rgba(3, 47, 31, 0.96),
+              rgba(5, 72, 39, 0.78)
+            ),
+            linear-gradient(145deg, #0a6538, #073d28) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            0 18px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .cola-social-titulo {
+          gap: 4px;
+        }
+
+        .cola-social .cola-cabecalho .cola-social-titulo span {
+          color: #f7d222 !important;
+          font-size: 21px !important;
+          font-weight: 900;
+          text-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+        }
+
+        .cola-social-titulo h2 {
+          display: flex;
+          flex-direction: column;
+          margin: 8px 0 0;
+          color: #ffffff;
+          font-size: 62px;
+          font-weight: 800;
+          line-height: 0.82;
+          letter-spacing: -0.055em;
+          text-transform: uppercase;
+          text-shadow: 0 7px 0 rgba(0, 0, 0, 0.18);
+        }
+
+        .cola-social-titulo h2 strong {
+          color: #f6cf20;
+          font-size: 1.22em;
+          font-weight: 950;
+        }
+
+        .cola-social-titulo p {
+          margin: 14px 0 0;
+          color: rgba(255, 255, 255, 0.82);
+          font-size: 17px;
+          font-weight: 700;
+        }
+
+        .cola-social .cola-cabecalho > strong {
+          width: 72px !important;
+          min-width: 72px !important;
+          height: 72px !important;
+          margin-top: 4px;
+          font-size: 23px !important;
+        }
+
+        .cola-social .cola-candidatos,
+        .formato-story .cola-social .cola-candidatos {
+          position: relative;
+          z-index: 2;
+          gap: 8px;
+          padding: 12px 0 !important;
+          background: transparent !important;
+        }
+
+        .cola-social .cola-candidato,
+        .formato-story .cola-social .cola-candidato {
+          grid-template-columns: 54px 112px minmax(0, 1fr) auto !important;
+          gap: 22px !important;
+          min-height: 0;
+          padding: 14px 28px 14px 22px !important;
+          border: 2px solid rgba(255, 255, 255, 0.62) !important;
+          border-left: 12px solid #f5cd1c !important;
+          border-radius: 16px;
+          background: linear-gradient(
+            100deg,
+            #fffdf3 0%,
+            #ffffff 68%,
+            #ecf3df 100%
+          ) !important;
+          box-shadow:
+            0 10px 20px rgba(0, 0, 0, 0.23),
+            inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        }
+
+        .cola-social .cola-candidato:nth-child(even) {
+          border-left-color: #2b9749 !important;
+          background: linear-gradient(
+            100deg,
+            #ddf09d 0%,
+            #eff5c8 64%,
+            #f7d833 100%
+          ) !important;
+        }
+
+        .cola-social .cola-candidato-vazio,
+        .formato-story .cola-social .cola-candidato-vazio {
+          grid-template-columns: 54px minmax(0, 1fr) auto !important;
+        }
+
+        .cola-social .cola-ordem,
+        .formato-story .cola-social .cola-ordem {
+          width: 50px !important;
+          height: 50px !important;
+          color: #ffffff;
+          font-size: 22px !important;
+        }
+
+        .cola-social .foto-na-cola,
+        .cola-social .iniciais-cola,
+        .formato-story .cola-social .foto-na-cola,
+        .formato-story .cola-social .iniciais-cola {
+          width: 108px !important;
+          min-width: 108px !important;
+          height: 108px !important;
+          border: 4px solid #ffffff !important;
+          box-shadow:
+            0 0 0 3px #278447,
+            0 10px 22px rgba(0, 0, 0, 0.28);
+        }
+
+        .cola-social .cola-dados small,
+        .formato-story .cola-social .cola-dados small {
+          color: #397343 !important;
+          font-size: 17px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.03em;
+        }
+
+        .cola-social .cola-dados strong,
+        .formato-story .cola-social .cola-dados strong {
+          color: #102f24 !important;
+          font-size: 38px !important;
+          font-weight: 950 !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.035em;
+          text-transform: uppercase;
+        }
+
+        .cola-social .cola-dados em,
+        .formato-story .cola-social .cola-dados em {
+          color: #21813e !important;
+          font-size: 18px !important;
+          font-weight: 900 !important;
+        }
+
+        .cola-social .cola-candidato > b,
+        .formato-story .cola-social .cola-candidato > b {
+          color: #073927 !important;
+          font-size: 66px !important;
+          font-weight: 950 !important;
+          letter-spacing: -0.065em;
+          text-shadow:
+            0 3px 0 #ffffff,
+            0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .arte-social-aviso,
+        .formato-story .arte-social-aviso {
+          z-index: 2;
+          padding: 20px 60px 22px;
+          border: 2px solid rgba(255, 255, 255, 0.24);
+          border-top: 5px solid #f6cf20;
+          border-radius: 0 0 34px 34px;
+          background: rgba(3, 45, 29, 0.94);
+          color: #ffffff;
+          font-size: 20px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+        }
+
+        .arte-social-aviso::before,
+        .arte-social-aviso::after {
+          background: rgba(246, 207, 32, 0.55);
+        }
+
+        .formato-story .cola-social .cola-cabecalho {
+          min-height: 300px;
+          padding: 48px 52px 38px !important;
+        }
+
+        .formato-story .cola-social-titulo h2 {
+          font-size: 82px;
+        }
+
+        .formato-story .cola-social-titulo p {
+          font-size: 20px;
+        }
+
+        .formato-story .cola-social .cola-candidato {
+          grid-template-columns: 58px 134px minmax(0, 1fr) auto !important;
+          padding: 16px 30px 16px 24px !important;
+        }
+
+        .formato-story .cola-social .foto-na-cola,
+        .formato-story .cola-social .iniciais-cola {
+          width: 130px !important;
+          min-width: 130px !important;
+          height: 130px !important;
+        }
+
+        .formato-story .cola-social .cola-dados small {
+          font-size: 19px !important;
+        }
+
+        .formato-story .cola-social .cola-dados strong {
+          font-size: 44px !important;
+        }
+
+        .formato-story .cola-social .cola-dados em {
+          font-size: 21px !important;
+        }
+
+        .formato-story .cola-social .cola-candidato > b {
+          font-size: 74px !important;
+        }
+
+        /* Versão mais próxima de um cartaz de campanha: faixas cheias e pinceladas. */
+        .arte-social {
+          background:
+            linear-gradient(
+              168deg,
+              transparent 0 7%,
+              #ffdc24 7.2% 10%,
+              transparent 10.2%
+            ),
+            linear-gradient(
+              8deg,
+              transparent 0 87%,
+              rgba(255, 218, 27, 0.95) 87.2% 92%,
+              transparent 92.2%
+            ),
+            linear-gradient(174deg, #08783c 0%, #075e32 48%, #034523 100%);
+        }
+
+        .arte-social::before,
+        .arte-social::after {
+          position: absolute;
+          z-index: 0;
+          left: -8%;
+          width: 116%;
+          height: 190px;
+          background: #f6cf1f;
+          clip-path: polygon(
+            0 22%,
+            7% 10%,
+            18% 20%,
+            31% 4%,
+            45% 16%,
+            61% 2%,
+            77% 14%,
+            91% 4%,
+            100% 17%,
+            98% 83%,
+            86% 94%,
+            70% 82%,
+            56% 97%,
+            41% 84%,
+            25% 96%,
+            10% 82%,
+            0 91%
+          );
+          content: "";
+          opacity: 0.98;
+          transform: rotate(-2deg);
+        }
+
+        .arte-social::before {
+          top: -88px;
+        }
+
+        .arte-social::after {
+          bottom: -96px;
+          transform: rotate(2deg);
+        }
+
+        .bandeira-social {
+          top: -52px;
+          right: -74px;
+          width: 390px;
+          opacity: 0.96;
+          filter: saturate(1.12) drop-shadow(0 16px 20px rgba(0, 0, 0, 0.34));
+          transform: rotate(7deg);
+        }
+
+        .arte-social-decoracao {
+          display: none;
+        }
+
+        .arte-social-conteudo,
+        .formato-story .arte-social-conteudo,
+        .formato-publicacao .arte-social-conteudo {
+          padding: 18px 20px;
+        }
+
+        .cola-social,
+        .formato-story .cola-social {
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          overflow: visible;
+        }
+
+        .cola-social .cola-cabecalho,
+        .formato-story .cola-social .cola-cabecalho {
+          min-height: 250px;
+          padding: 32px 34px 26px !important;
+          border: 0;
+          border-bottom: 0;
+          border-radius: 0;
+          background: transparent !important;
+          box-shadow: none;
+        }
+
+        .cola-social .cola-cabecalho .cola-social-titulo span {
+          align-self: flex-start;
+          padding: 7px 16px;
+          border-radius: 2px;
+          background: #f6cf1f;
+          color: #073b25 !important;
+          font-size: 22px !important;
+          letter-spacing: 0.08em !important;
+          text-shadow: none;
+          transform: rotate(-1deg);
+        }
+
+        .cola-social-titulo h2,
+        .formato-story .cola-social-titulo h2 {
+          margin-top: 8px;
+          color: #ffffff;
+          font-family: Impact, "Arial Black", Arial, sans-serif;
+          font-size: 72px;
+          font-weight: 900;
+          line-height: 0.78;
+          letter-spacing: -0.035em;
+          text-shadow:
+            3px 4px 0 #064524,
+            7px 8px 0 rgba(0, 0, 0, 0.22);
+        }
+
+        .cola-social-titulo h2 strong {
+          color: #ffffff;
+          font-size: 1.08em;
+        }
+
+        .cola-social-titulo p {
+          display: none;
+        }
+
+        .cola-social .cola-cabecalho > strong {
+          position: relative;
+          z-index: 3;
+          width: 62px !important;
+          min-width: 62px !important;
+          height: 62px !important;
+          margin-top: 128px;
+          font-size: 21px !important;
+        }
+
+        .cola-social .cola-candidatos,
+        .formato-story .cola-social .cola-candidatos {
+          gap: 6px;
+          padding: 0 !important;
+        }
+
+        .cola-social .cola-candidato,
+        .formato-story .cola-social .cola-candidato {
+          grid-template-columns: 132px 54px minmax(0, 1fr) auto !important;
+          gap: 14px !important;
+          padding: 8px 22px 8px 8px !important;
+          border: 0 !important;
+          border-radius: 10px;
+          background: linear-gradient(
+            100deg,
+            #ffdc27 0%,
+            #f6ce1c 76%,
+            #efb914 100%
+          ) !important;
+          box-shadow:
+            0 6px 0 rgba(0, 45, 23, 0.38),
+            0 10px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .cola-social .cola-candidato:nth-child(even) {
+          background: linear-gradient(
+            100deg,
+            #79cf4b 0%,
+            #97dc57 70%,
+            #e3dc29 100%
+          ) !important;
+        }
+
+        .cola-social .cola-candidato-vazio,
+        .formato-story .cola-social .cola-candidato-vazio {
+          grid-template-columns: 54px minmax(0, 1fr) auto !important;
+          padding-left: 18px !important;
+        }
+
+        .cola-social .foto-na-cola,
+        .cola-social .iniciais-cola,
+        .formato-story .cola-social .foto-na-cola,
+        .formato-story .cola-social .iniciais-cola {
+          width: 126px !important;
+          min-width: 126px !important;
+          height: 136px !important;
+          border: 2px solid #ffffff !important;
+          border-radius: 9px !important;
+          box-shadow: 4px 5px 0 #075a30;
+        }
+
+        .cola-social .cola-ordem,
+        .formato-story .cola-social .cola-ordem {
+          width: 48px !important;
+          height: 48px !important;
+          border: 3px solid #f7d220;
+          background: #06482a !important;
+          font-size: 21px !important;
+          box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.22);
+        }
+
+        .cola-social .cola-dados small,
+        .formato-story .cola-social .cola-dados small {
+          color: #123d27 !important;
+          font-size: 15px !important;
+          font-weight: 950 !important;
+        }
+
+        .cola-social .cola-dados strong,
+        .formato-story .cola-social .cola-dados strong {
+          color: #092f20 !important;
+          font-family: "Arial Black", Arial, sans-serif;
+          font-size: 34px !important;
+          line-height: 0.94 !important;
+          letter-spacing: -0.045em;
+          text-shadow: 1px 2px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .cola-social .cola-dados em,
+        .formato-story .cola-social .cola-dados em {
+          color: #0a5d31 !important;
+          font-size: 16px !important;
+        }
+
+        .cola-social .cola-candidato > b,
+        .formato-story .cola-social .cola-candidato > b {
+          color: #062f20 !important;
+          font-family: Impact, "Arial Black", Arial, sans-serif;
+          font-size: 62px !important;
+          letter-spacing: -0.035em;
+          text-shadow: 2px 3px 0 rgba(255, 255, 255, 0.42);
+        }
+
+        .arte-social-aviso,
+        .formato-story .arte-social-aviso {
+          padding: 16px 54px 18px;
+          border: 0;
+          border-top: 5px solid #f6cf1f;
+          border-radius: 0;
+          background: #053d26;
+          color: #ffffff;
+          font-size: 18px;
+          box-shadow: none;
+        }
+
+        .formato-story .cola-social .cola-cabecalho {
+          min-height: 330px;
+          padding: 44px 46px 30px !important;
+        }
+
+        .formato-story .cola-social-titulo h2 {
+          font-size: 104px;
+        }
+
+        .formato-story .cola-social .cola-candidato {
+          grid-template-columns: 176px 64px minmax(0, 1fr) auto !important;
+          gap: 18px !important;
+          padding: 8px 28px 8px 8px !important;
+        }
+
+        .formato-story .cola-social .foto-na-cola,
+        .formato-story .cola-social .iniciais-cola {
+          width: 170px !important;
+          min-width: 170px !important;
+          height: 184px !important;
+        }
+
+        .formato-story .cola-social .cola-ordem {
+          width: 58px !important;
+          height: 58px !important;
+          font-size: 25px !important;
+        }
+
+        .formato-story .cola-social .cola-dados small {
+          font-size: 18px !important;
+        }
+
+        .formato-story .cola-social .cola-dados strong {
+          font-size: 43px !important;
+        }
+
+        .formato-story .cola-social .cola-dados em {
+          font-size: 20px !important;
+        }
+
+        .formato-story .cola-social .cola-candidato > b {
+          font-size: 78px !important;
         }
 
         .fundo-modal-imagem {
@@ -3148,6 +3743,254 @@ export default function Home() {
         }
 
         /* REGRAS DE IMPRESSÃO - MANTÉM DESIGN EXATO DO CARD */
+        /* Mantém o cartaz social acima das regras antigas da cola impressa. */
+        .arte-social .resumo-cola-final .cola-cabecalho h2 {
+          display: flex !important;
+          flex-direction: column;
+          margin: 8px 0 0 !important;
+          color: #ffffff !important;
+          font-family: Impact, "Arial Black", Arial, sans-serif !important;
+          font-size: 72px !important;
+          font-weight: 900 !important;
+          line-height: 0.78 !important;
+          letter-spacing: -0.035em !important;
+          text-transform: uppercase;
+          text-shadow:
+            3px 4px 0 #064524,
+            7px 8px 0 rgba(0, 0, 0, 0.22);
+        }
+
+        .arte-social .resumo-cola-final .cola-cabecalho h2 strong {
+          color: #ffffff !important;
+          font-size: 1.08em !important;
+          font-weight: 950 !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-cabecalho > strong {
+          width: 62px !important;
+          min-width: 62px !important;
+          height: 62px !important;
+          margin-top: 128px;
+          font-size: 21px !important;
+        }
+
+        .formato-story .bandeira-social {
+          top: -40px;
+          right: -58px;
+          width: 330px;
+        }
+
+        .formato-story .resumo-cola-final .cola-cabecalho {
+          min-height: 300px;
+          padding: 34px 42px 26px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-cabecalho h2 {
+          font-size: 96px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-dados strong {
+          font-size: 39px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-candidato > b {
+          font-size: 74px !important;
+        }
+
+        /* Fundo fotográfico escolhido para a postagem. */
+        .arte-social {
+          background: #064624;
+        }
+
+        .fundo-social {
+          position: absolute;
+          z-index: 0;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+
+        .arte-social::before {
+          z-index: 1;
+          inset: 0;
+          width: auto;
+          height: auto;
+          background: linear-gradient(
+            180deg,
+            rgba(3, 35, 20, 0.18) 0%,
+            rgba(3, 42, 23, 0.28) 42%,
+            rgba(2, 36, 20, 0.48) 100%
+          );
+          clip-path: none;
+          opacity: 1;
+          transform: none;
+        }
+
+        .arte-social::after {
+          display: none;
+        }
+
+        .arte-social .arte-social-conteudo {
+          z-index: 2;
+        }
+
+        .arte-social .resumo-cola-final .cola-cabecalho {
+          background: linear-gradient(
+            90deg,
+            rgba(3, 56, 30, 0.9) 0%,
+            rgba(4, 72, 38, 0.58) 62%,
+            transparent 100%
+          ) !important;
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato {
+          opacity: 0.97;
+        }
+
+        .arte-social .resumo-cola-final .arte-social-aviso {
+          background: rgba(3, 52, 29, 0.94);
+          backdrop-filter: blur(3px);
+        }
+
+        /* Cards dos candidatos no formato compacto da referência. */
+        .arte-social .resumo-cola-final .cola-candidatos {
+          gap: 5px;
+          padding: 0 4px !important;
+          border-right: 6px solid rgba(4, 72, 39, 0.9);
+          border-left: 6px solid rgba(4, 72, 39, 0.9);
+          background: rgba(3, 63, 33, 0.82) !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato {
+          grid-template-columns: 142px 56px minmax(0, 1fr) auto !important;
+          gap: 16px !important;
+          min-height: 0;
+          padding: 0 22px 0 0 !important;
+          border: 3px solid #07562f !important;
+          border-radius: 10px;
+          background: linear-gradient(
+            100deg,
+            #f9da27 0%,
+            #f5cf1c 74%,
+            #e8b711 100%
+          ) !important;
+          box-shadow: none;
+          opacity: 1;
+          overflow: hidden;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato:nth-child(even) {
+          background: linear-gradient(
+            100deg,
+            #69c94a 0%,
+            #91db53 72%,
+            #c9dd38 100%
+          ) !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato-vazio {
+          grid-template-columns: 56px minmax(0, 1fr) auto !important;
+          padding-left: 18px !important;
+        }
+
+        .arte-social .resumo-cola-final .foto-na-cola,
+        .arte-social .resumo-cola-final .iniciais-cola {
+          align-self: stretch;
+          width: 138px !important;
+          min-width: 138px !important;
+          height: 100% !important;
+          min-height: 118px;
+          border: 0 !important;
+          border-right: 3px solid #ffffff !important;
+          border-radius: 7px 0 0 7px !important;
+          box-shadow: none;
+          object-fit: cover;
+          object-position: center top;
+        }
+
+        .arte-social .resumo-cola-final .cola-ordem {
+          width: 52px !important;
+          height: 52px !important;
+          border: 3px solid #f8d622;
+          background: #064426 !important;
+          color: #ffffff;
+          font-size: 22px !important;
+          box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .arte-social .resumo-cola-final .cola-dados {
+          min-width: 0;
+          justify-content: center;
+        }
+
+        .arte-social .resumo-cola-final .cola-dados small {
+          color: #164829 !important;
+          font-size: 16px !important;
+          font-weight: 950 !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-dados strong {
+          overflow: visible;
+          color: #092f20 !important;
+          font-family: "Arial Black", Arial, sans-serif;
+          font-size: 36px !important;
+          line-height: 0.94 !important;
+          text-overflow: clip;
+          white-space: normal;
+        }
+
+        .arte-social .resumo-cola-final .cola-dados em {
+          color: #075b2e !important;
+          font-size: 17px !important;
+          font-weight: 950 !important;
+        }
+
+        .arte-social .resumo-cola-final .cola-candidato > b {
+          color: #062f20 !important;
+          font-family: Impact, "Arial Black", Arial, sans-serif;
+          font-size: 66px !important;
+          letter-spacing: -0.04em;
+          text-shadow: 2px 3px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .formato-story .resumo-cola-final .cola-candidato {
+          grid-template-columns: 188px 68px minmax(0, 1fr) auto !important;
+          gap: 20px !important;
+          padding-right: 30px !important;
+        }
+
+        .formato-story .resumo-cola-final .foto-na-cola,
+        .formato-story .resumo-cola-final .iniciais-cola {
+          width: 184px !important;
+          min-width: 184px !important;
+          min-height: 170px;
+        }
+
+        .formato-story .resumo-cola-final .cola-ordem {
+          width: 62px !important;
+          height: 62px !important;
+          font-size: 26px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-dados small {
+          font-size: 18px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-dados strong {
+          font-size: 43px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-dados em {
+          font-size: 20px !important;
+        }
+
+        .formato-story .resumo-cola-final .cola-candidato > b {
+          font-size: 80px !important;
+        }
+
         @media print {
           html,
           body {
