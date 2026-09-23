@@ -4173,8 +4173,8 @@ export default function Home() {
 
         .cola-modelo-estado {
           position: absolute;
-          top: 330px;
-          right: 184px;
+          top: 128px;
+          right: 78px;
           display: flex;
           width: 150px;
           height: 76px;
@@ -4216,27 +4216,27 @@ export default function Home() {
 
         .cola-modelo-lista {
           position: absolute;
-          top: 30px;
-          bottom: 52px;
-          left: 112px;
+          top: 48px;
+          bottom: 88px;
+          left: 104px;
           display: grid;
-          width: 660px;
+          width: 770px;
           grid-template-rows: repeat(6, minmax(0, 1fr));
-          gap: 5px;
+          gap: 3px;
         }
 
         .cola-modelo-linha {
           display: grid;
           min-width: 0;
-          grid-template-columns: 132px minmax(0, 1fr);
+          grid-template-columns: 142px minmax(0, 1fr);
           align-items: center;
-          gap: 18px;
+          gap: 20px;
         }
 
         .cola-modelo-foto {
           display: grid;
-          width: 122px;
-          height: 122px;
+          width: 132px;
+          height: 132px;
           place-items: center;
           overflow: hidden;
           border: 4px solid rgba(255, 255, 255, 0.96);
@@ -4281,11 +4281,11 @@ export default function Home() {
         .cola-modelo-informacoes > strong {
           display: block;
           overflow: hidden;
-          max-width: 500px;
+          max-width: 600px;
           margin-top: 5px;
           color: #f4cb08;
           font-family: "Brush Script MT", "Segoe Script", cursive;
-          font-size: 39px;
+          font-size: 40px;
           font-weight: 700;
           line-height: 1.03;
           text-shadow:
@@ -4298,7 +4298,7 @@ export default function Home() {
         .cola-modelo-informacoes > em {
           min-height: 15px;
           color: rgba(255, 255, 255, 0.9);
-          font-size: 14px;
+          font-size: 15px;
           font-style: normal;
           font-weight: 800;
           line-height: 1;
@@ -4308,21 +4308,21 @@ export default function Home() {
 
         .cola-modelo-digitos {
           display: flex;
-          margin-top: 6px;
-          gap: 8px;
+          margin-top: 8px;
+          gap: 9px;
         }
 
         .cola-modelo-digitos i {
           display: grid;
-          width: 56px;
-          height: 58px;
+          width: 64px;
+          height: 66px;
           place-items: center;
           border: 2px solid rgba(255, 255, 255, 0.94);
           border-radius: 11px;
           background: rgba(255, 255, 255, 0.97);
           color: #071a17;
           font-family: Arial, sans-serif;
-          font-size: 38px;
+          font-size: 45px;
           font-style: normal;
           font-weight: 900;
           line-height: 1;
@@ -4463,10 +4463,10 @@ export default function Home() {
         }
 
         .folha-a4-preview .cola-miniatura-estilizada .numero-em-caixas i {
-          width: 7px;
-          height: 9px;
+          width: 8px;
+          height: 10px;
           border-radius: 1.5px;
-          font-size: 5px;
+          font-size: 6px;
           border-width: 0.5px;
           box-shadow: none;
         }
@@ -4475,9 +4475,9 @@ export default function Home() {
           .cola-miniatura-estilizada
           .numero-em-caixas
           i {
-          width: 11px;
-          height: 13px;
-          font-size: 7px;
+          width: 13px;
+          height: 15px;
+          font-size: 9px;
         }
 
         .resumo-formato-final .cola-candidato-vazio,
@@ -4605,9 +4605,9 @@ export default function Home() {
           .cola-miniatura-estilizada
           .numero-em-caixas
           i {
-          width: 8px !important;
-          height: 10px !important;
-          font-size: 5.5px !important;
+          width: 10px !important;
+          height: 12px !important;
+          font-size: 7px !important;
         }
 
         .folha-a4-preview.copias-4 .cola-miniatura-estilizada .cola-candidatos {
@@ -4653,9 +4653,9 @@ export default function Home() {
           .cola-miniatura-estilizada
           .numero-em-caixas
           i {
-          width: 12px !important;
-          height: 15px !important;
-          font-size: 8px !important;
+          width: 14px !important;
+          height: 17px !important;
+          font-size: 10px !important;
         }
 
         @media print {
@@ -5048,16 +5048,16 @@ export default function Home() {
           }
 
           .folha-impressao-real.copias-9 .numero-em-caixas i {
-            width: 2.7mm;
-            height: 3.3mm;
-            font-size: 5pt;
+            width: 3.1mm;
+            height: 4mm;
+            font-size: 6pt;
           }
 
           .folha-impressao-real.copias-4 .numero-em-caixas i {
-            width: 4.7mm;
-            height: 5.7mm;
+            width: 5.7mm;
+            height: 7mm;
             border-radius: 1mm;
-            font-size: 8.5pt;
+            font-size: 10.5pt;
           }
 
           .folha-impressao-real .digitos-preenchimento-manual i {
@@ -5155,9 +5155,9 @@ export default function Home() {
           }
 
           .folha-impressao-real.copias-6 .numero-em-caixas i {
-            width: 3.6mm !important;
-            height: 4.6mm !important;
-            font-size: 6.5pt !important;
+            width: 4.1mm !important;
+            height: 5.2mm !important;
+            font-size: 7.5pt !important;
           }
 
           .folha-impressao-real.copias-4 .cola-candidatos {
@@ -5193,9 +5193,9 @@ export default function Home() {
           }
 
           .folha-impressao-real.copias-4 .numero-em-caixas i {
-            width: 5mm !important;
-            height: 6.2mm !important;
-            font-size: 9pt !important;
+            width: 5.7mm !important;
+            height: 7mm !important;
+            font-size: 10.5pt !important;
           }
 
           @page {
